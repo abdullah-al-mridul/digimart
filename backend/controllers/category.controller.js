@@ -3,6 +3,7 @@ import {
   uploadToCloudinary,
   deleteFromCloudinary,
 } from "../utilities/cloudinary.js";
+import Product from "../models/product.model.js";
 
 // @desc    Create new category
 export const createCategory = async (req, res) => {
@@ -84,9 +85,32 @@ export const getCategoryById = async (req, res) => {
       });
     }
 
+    // Get products under this category with pagination
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const sort = req.query.sort || "-createdAt";
+
+    const products = await Product.find({ category: category._id })
+      .select("name price images slug stock rating discount") // Select relevant fields
+      .sort(sort)
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    // Get total products count for pagination
+    const totalProducts = await Product.countDocuments({
+      category: category._id,
+    });
+
     res.json({
       success: true,
       category,
+      products: {
+        items: products,
+        currentPage: page,
+        totalPages: Math.ceil(totalProducts / limit),
+        totalItems: totalProducts,
+        hasMore: page * limit < totalProducts,
+      },
     });
   } catch (error) {
     res.status(500).json({
@@ -157,17 +181,33 @@ export const deleteCategory = async (req, res) => {
       });
     }
 
+    // Find all products in this category
+    const products = await Product.find({ category: category._id });
+
+    // Delete all product images from Cloudinary
+    for (const product of products) {
+      for (const imageUrl of product.images) {
+        const publicId = imageUrl.split("/").pop().split(".")[0];
+        await deleteFromCloudinary(publicId);
+      }
+    }
+
+    // Delete all products in this category
+    await Product.deleteMany({ category: category._id });
+
     // Delete category image if it's not the default
     if (category.image !== "default-category.png") {
       const publicId = category.image.split("/").pop().split(".")[0];
       await deleteFromCloudinary(publicId);
     }
 
-    await category.remove();
+    // Delete the category
+    await category.deleteOne();
 
     res.json({
       success: true,
-      message: "Category deleted successfully",
+      message: "Category and all its products deleted successfully",
+      deletedProductsCount: products.length,
     });
   } catch (error) {
     res.status(500).json({
