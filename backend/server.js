@@ -4,6 +4,8 @@ import mongoose from "mongoose";
 import cors from "cors";
 import authRouter from "./routes/auth.routes.js";
 import cookieParser from "cookie-parser";
+import productRouter from "./routes/product.routes.js";
+import categoryRouter from "./routes/category.routes.js";
 
 dotenv.config();
 
@@ -27,6 +29,8 @@ mongoose
     console.log(err);
   });
 server.use("/api/v1/auth", authRouter);
+server.use("/api/v1/products", productRouter);
+server.use("/api/v1/categories", categoryRouter);
 server.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
 });
