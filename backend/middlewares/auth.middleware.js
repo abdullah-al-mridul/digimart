@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
+import Product from "../models/product.model.js";
+import Order from "../models/order.model.js";
 
 // Verify JWT token and add user to request
 export const isAuthenticated = async (req, res, next) => {
@@ -9,6 +11,7 @@ export const isAuthenticated = async (req, res, next) => {
 
     if (!token) {
       return res.status(401).json({
+        success: false,
         message: "Access denied. No token provided",
       });
     }
@@ -19,12 +22,19 @@ export const isAuthenticated = async (req, res, next) => {
     // Get user from database
     const user = await User.findById(decoded.userId)
       .select("-password")
-      .populate("cart.product")
-      .populate("wishlist")
+      .populate({
+        path: "cart.product",
+        model: "Product",
+      })
+      .populate({
+        path: "wishlist",
+        model: "Product",
+      })
       .populate("orders");
 
     if (!user) {
       return res.status(404).json({
+        success: false,
         message: "User not found",
       });
     }
@@ -32,6 +42,7 @@ export const isAuthenticated = async (req, res, next) => {
     // Check if account is active
     if (user.accountStatus !== "active") {
       return res.status(403).json({
+        success: false,
         message: `Your account is ${user.accountStatus}. Please contact support.`,
       });
     }
@@ -42,17 +53,20 @@ export const isAuthenticated = async (req, res, next) => {
   } catch (error) {
     if (error.name === "JsonWebTokenError") {
       return res.status(401).json({
+        success: false,
         message: "Invalid token",
       });
     }
     if (error.name === "TokenExpiredError") {
       return res.status(401).json({
+        success: false,
         message: "Token has expired",
       });
     }
     res.status(500).json({
+      success: false,
       message: "Authentication failed",
-      error: error.message,
+      error: process.env.NODE_ENV === "development" ? error.message : undefined,
     });
   }
 };

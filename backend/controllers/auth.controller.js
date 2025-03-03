@@ -1,5 +1,4 @@
 import User from "../models/user.model.js";
-import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
@@ -101,6 +100,7 @@ export const login = async (req, res) => {
     // Validate input
     if (!email || !password) {
       return res.status(400).json({
+        success: false,
         message: "Please provide email and password",
       });
     }
@@ -111,6 +111,7 @@ export const login = async (req, res) => {
     // Check if user exists
     if (!user) {
       return res.status(401).json({
+        success: false,
         message: "Invalid email or password",
       });
     }
@@ -119,6 +120,7 @@ export const login = async (req, res) => {
     const isValidPassword = await user.comparePassword(password);
     if (!isValidPassword) {
       return res.status(401).json({
+        success: false,
         message: "Invalid email or password",
       });
     }
@@ -133,38 +135,47 @@ export const login = async (req, res) => {
       { expiresIn: "24h" }
     );
 
-    // Update last login time
+    // Update last login time and session history
     user.lastLogin = new Date();
+    user.sessionHistory.push({
+      action: "login",
+      timestamp: new Date(),
+      userAgent: req.headers["user-agent"],
+      ip: req.ip,
+      device: req.headers["sec-ch-ua-platform"] || "unknown",
+    });
+
     await user.save();
 
     // Get user data without sensitive information
     const userData = user.getPublicProfile();
 
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    });
+
     res.json({
+      success: true,
       message: "Login successful",
       user: userData,
       token,
     });
   } catch (error) {
     res.status(500).json({
+      success: false,
       message: "Failed to login",
-      error: error.message,
+      error: process.env.NODE_ENV === "development" ? error.message : undefined,
     });
   }
 };
 
 export const me = async (req, res) => {
   try {
-    // Get token from header
-    const token = req.headers.authorization?.split(" ")[1];
-    if (!token) {
-      return res.status(401).json({
-        message: "Please login to continue",
-      });
-    }
-
+    console.log("middle ware passed");
     // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(req.cookies.token, process.env.JWT_SECRET);
 
     // Get user from database
     const user = await User.findById(decoded.userId)
@@ -211,15 +222,41 @@ export const me = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
-    // Since we're using JWT, we don't need to do anything server-side
-    // The client will remove the token
-    res.json({
-      message: "Logout successful",
+    const user = req.user;
+
+    // Update user's last login time
+    await User.findByIdAndUpdate(user._id, {
+      lastLogin: new Date(),
+      $push: {
+        // Keep track of logout history
+        sessionHistory: {
+          action: "logout",
+          timestamp: new Date(),
+          userAgent: req.headers["user-agent"],
+          ip: req.ip,
+        },
+      },
+    });
+
+    // Clear cookies if they exist
+    res.clearCookie("token");
+
+    res.status(200).json({
+      success: true,
+      message: "Logged out successfully",
     });
   } catch (error) {
+    if (error.name === "JsonWebTokenError") {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid token",
+      });
+    }
+
     res.status(500).json({
-      message: "Failed to logout",
-      error: error.message,
+      success: false,
+      message: "Error during logout",
+      error: process.env.NODE_ENV === "development" ? error.message : undefined,
     });
   }
 };

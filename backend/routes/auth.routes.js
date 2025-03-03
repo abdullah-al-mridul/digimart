@@ -1,17 +1,15 @@
 import express from "express";
 import { register, login, me, logout } from "../controllers/auth.controller.js";
+import { isAuthenticated } from "../middlewares/auth.middleware.js";
+
 const authRouter = express.Router();
 
-// Register new user
+// Public routes
 authRouter.post("/register", register);
-
-// Login user
 authRouter.post("/login", login);
 
-// Get current user info
-authRouter.get("/me", me);
-
-// Logout
-authRouter.post("/logout", logout);
+// Protected routes
+authRouter.get("/me", isAuthenticated, me);
+authRouter.post("/logout", isAuthenticated, logout); // Protected with verifyToken middleware
 
 export default authRouter;

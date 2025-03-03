@@ -143,6 +143,23 @@ const userSchema = new mongoose.Schema(
       enum: ["active", "suspended", "deactivated"],
       default: "active",
     },
+    sessionHistory: [
+      {
+        action: {
+          type: String,
+          enum: ["login", "logout", "token_refresh"],
+          required: true,
+        },
+        timestamp: {
+          type: Date,
+          default: Date.now,
+        },
+        userAgent: String,
+        ip: String,
+        device: String,
+        location: String,
+      },
+    ],
   },
   {
     timestamps: true, // Adds createdAt and updatedAt fields
