@@ -1,5 +1,6 @@
 import Cart from "../models/cart.model.js";
 import Product from "../models/product.model.js";
+import User from "../models/user.model.js";
 
 export const addToCart = async (req, res) => {
   try {
@@ -23,12 +24,15 @@ export const addToCart = async (req, res) => {
 
     // Find user's cart or create new one
     let cart = await Cart.findOne({ user: req.user._id });
+    let user = await User.findById(req.user._id);
     if (!cart) {
       cart = await Cart.create({
         user: req.user._id,
         items: [],
       });
     }
+    // user.cart.push(productId);
+    // await user.save();
 
     // Check if product already in cart
     const existingItem = cart.items.find(

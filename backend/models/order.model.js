@@ -35,6 +35,7 @@ const orderSchema = new mongoose.Schema(
       state: { type: String, required: true },
       postalCode: { type: String, required: true },
       country: { type: String, required: true },
+      phone: { type: String, required: true },
     },
     paymentMethod: {
       type: { type: String, required: true },
@@ -45,7 +46,8 @@ const orderSchema = new mongoose.Schema(
       enum: ["pending", "paid", "failed", "refunded"],
       default: "pending",
     },
-    orderStatus: {
+    status: {
+      // Changed from orderStatus to status to match controller
       type: String,
       enum: [
         "pending",
@@ -56,6 +58,11 @@ const orderSchema = new mongoose.Schema(
         "returned",
       ],
       default: "pending",
+    },
+    totalAmount: {
+      // Added to match controller
+      type: Number,
+      required: true,
     },
     subtotal: {
       type: Number,
@@ -99,9 +106,10 @@ orderSchema.pre("save", function (next) {
 
 // Add status to history when status changes
 orderSchema.pre("save", function (next) {
-  if (this.isModified("orderStatus")) {
+  if (this.isModified("status")) {
+    // Changed from orderStatus to status
     this.statusHistory.push({
-      status: this.orderStatus,
+      status: this.status,
       date: new Date(),
     });
   }

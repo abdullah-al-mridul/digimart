@@ -7,7 +7,9 @@ import cookieParser from "cookie-parser";
 import productRouter from "./routes/product.routes.js";
 import categoryRouter from "./routes/category.routes.js";
 import cartRouter from "./routes/cart.routes.js";
-
+import orderRouter from "./routes/order.routes.js";
+import wishlistRouter from "./routes/wishlist.routes.js";
+import paymentRouter from "./routes/payment.routes.js";
 dotenv.config();
 
 const server = express();
@@ -33,6 +35,9 @@ server.use("/api/v1/auth", authRouter);
 server.use("/api/v1/products", productRouter);
 server.use("/api/v1/categories", categoryRouter);
 server.use("/api/v1/cart", cartRouter);
+server.use("/api/v1/orders", orderRouter);
+server.use("/api/v1/wishlist", wishlistRouter);
+server.use("/api/v1/payment", paymentRouter);
 server.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
 });
