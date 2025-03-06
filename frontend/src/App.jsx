@@ -1,10 +1,6 @@
 import "./App.css";
 import React from "react";
 import Header from "./components/Header";
-import Slider from "./components/Slider";
-import Categories from "./components/Categories";
-import TopProducts from "./components/TopProducts";
-import SecurePayment from "./components/SecurePayment";
 import Footer from "./components/Footer";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
@@ -13,6 +9,11 @@ import Login from "./pages/Login";
 import Product from "./pages/Product";
 import Cart from "./pages/Cart";
 import Wishlist from "./pages/Wishlist";
+import Orders from "./pages/Orders";
+import Category from "./pages/Category";
+import Sessions from "./pages/Sessions";
+import Admin from "./pages/Admin";
+import NotFound from "./pages/NotFound";
 const App = () => {
   return (
     <Router>
@@ -25,7 +26,11 @@ const App = () => {
           <Route path="/product/:id" element={<Product />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/wishlist" element={<Wishlist />} />
-          {/* <Route path="*" element={<NotFound />} /> 404 Route */}
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/category/:id" element={<Category />} />
+          <Route path="/sessions" element={<Sessions />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
       </div>
