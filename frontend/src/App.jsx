@@ -11,6 +11,7 @@ import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Product from "./pages/Product";
+import Cart from "./pages/Cart";
 const App = () => {
   return (
     <Router>
@@ -21,7 +22,7 @@ const App = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/product/:id" element={<Product />} />
-          {/* <Route path="/cart" element={<Cart />} /> */}
+          <Route path="/cart" element={<Cart />} />
           {/* <Route path="*" element={<NotFound />} /> 404 Route */}
         </Routes>
         <Footer />
