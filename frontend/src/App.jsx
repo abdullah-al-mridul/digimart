@@ -17,6 +17,9 @@ import NotFound from "./pages/NotFound";
 import Loader from "./components/Loader";
 import authStore from "./store/authStore";
 import SecureRoute from "./components/SecureRoute";
+import PaymentSuccess from "./pages/PaymentSuccess";
+import PaymentFail from "./pages/PaymentFail";
+
 const App = () => {
   const { user, getUser, loading } = authStore();
   console.log(user);
@@ -75,6 +78,22 @@ const App = () => {
             }
           />
           <Route path="*" element={<NotFound />} />
+          <Route
+            path="/payment/success"
+            element={
+              <SecureRoute>
+                <PaymentSuccess />
+              </SecureRoute>
+            }
+          />
+          <Route
+            path="/payment/fail"
+            element={
+              <SecureRoute>
+                <PaymentFail />
+              </SecureRoute>
+            }
+          />
         </Routes>
         <Footer />
       </div>
