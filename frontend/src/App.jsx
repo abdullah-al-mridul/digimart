@@ -12,6 +12,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Product from "./pages/Product";
 import Cart from "./pages/Cart";
+import Wishlist from "./pages/Wishlist";
 const App = () => {
   return (
     <Router>
@@ -23,6 +24,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/product/:id" element={<Product />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/wishlist" element={<Wishlist />} />
           {/* <Route path="*" element={<NotFound />} /> 404 Route */}
         </Routes>
         <Footer />
