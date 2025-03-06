@@ -10,6 +10,7 @@ import cartRouter from "./routes/cart.routes.js";
 import orderRouter from "./routes/order.routes.js";
 import wishlistRouter from "./routes/wishlist.routes.js";
 import paymentRouter from "./routes/payment.routes.js";
+import adminRouter from "./routes/admin.routes.js";
 dotenv.config();
 
 const server = express();
@@ -22,6 +23,7 @@ server.use(
   })
 );
 server.use(express.json());
+server.use(express.urlencoded({ extended: true }));
 server.use(cookieParser());
 mongoose
   .connect(process.env.MONGO_URI)
@@ -38,6 +40,7 @@ server.use("/api/v1/cart", cartRouter);
 server.use("/api/v1/orders", orderRouter);
 server.use("/api/v1/wishlist", wishlistRouter);
 server.use("/api/v1/payment", paymentRouter);
+server.use("/api/v1/admin", adminRouter);
 server.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
 });
