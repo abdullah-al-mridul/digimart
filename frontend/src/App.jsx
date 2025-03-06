@@ -1,5 +1,5 @@
 import "./App.css";
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -14,7 +14,16 @@ import Category from "./pages/Category";
 import Sessions from "./pages/Sessions";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
+import Loader from "./components/Loader";
+import authStore from "./store/authStore";
+import SecureRoute from "./components/SecureRoute";
 const App = () => {
+  const { user, getUser, loading } = authStore();
+  console.log(user);
+  useEffect(() => {
+    getUser();
+  }, [getUser]);
+  if (loading) return <Loader />;
   return (
     <Router>
       <div className="bg-level-1 min-h-[100dvh] max-h-[100dvh] overflow-y-auto">
@@ -24,12 +33,47 @@ const App = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/product/:id" element={<Product />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/wishlist" element={<Wishlist />} />
-          <Route path="/orders" element={<Orders />} />
+          <Route
+            path="/cart"
+            element={
+              <SecureRoute>
+                <Cart />
+              </SecureRoute>
+            }
+          />
+          <Route
+            path="/wishlist"
+            element={
+              <SecureRoute>
+                <Wishlist />
+              </SecureRoute>
+            }
+          />
+          <Route
+            path="/orders"
+            element={
+              <SecureRoute>
+                <Orders />
+              </SecureRoute>
+            }
+          />
           <Route path="/category/:id" element={<Category />} />
-          <Route path="/sessions" element={<Sessions />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route
+            path="/sessions"
+            element={
+              <SecureRoute>
+                <Sessions />
+              </SecureRoute>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <SecureRoute>
+                <Admin />
+              </SecureRoute>
+            }
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />

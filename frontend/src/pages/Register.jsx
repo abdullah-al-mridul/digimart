@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { Eye, EyeOff, ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import authStore from "../store/authStore";
 
 const Register = () => {
+  const { user } = authStore();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -28,7 +30,7 @@ const Register = () => {
     // Add your registration logic here
     console.log(formData);
   };
-
+  if (user) return <Navigate to={"/"} replace />;
   return (
     <div className="flex items-center border-b-2 border-level-4 border-dashed justify-center">
       <div className=" container min-h-[calc(100dvh-calc(var(--header-height)+var(--footer-height)+2px))] mx-auto border-r-2 border-l-2 border-level-4 border-dashed p-8">

@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { Eye, EyeOff, ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import authStore from "../store/authStore";
 
 const Login = () => {
+  const { login, user } = authStore();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -21,9 +23,10 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Add your login logic here
+    login(formData);
     console.log(formData);
   };
-
+  if (user) return <Navigate to={"/"} replace />;
   return (
     <div className="flex items-center border-b-2 border-level-4 border-dashed justify-center">
       <div
