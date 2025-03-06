@@ -7,9 +7,9 @@ const Header = () => {
         <div className="flex items-center justify-between">
           <div className="text-3xl font-extrabold text-level-5 cursor-pointer tracking-tight">
             <span className="bg-gradient-to-r from-level-4 to-level-5 text-transparent bg-clip-text">
-              Digi
+              DIGI
             </span>
-            <span className="text-level-5">mart</span>
+            <span className="text-level-5">MART</span>
           </div>
           <div>
             <ul className="flex items-center gap-6">

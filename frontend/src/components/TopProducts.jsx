@@ -185,7 +185,7 @@ const TopProducts = () => {
           {products.map((product, index) => (
             <div
               key={index}
-              className="border-2 border-level-4 rounded-2xl overflow-hidden group cursor-pointer hover:shadow-2xl hover:shadow-level-5/20 transition-all duration-300 hover:-translate-y-1"
+              className="border-2 border-level-4 rounded-xl overflow-hidden group cursor-pointer hover:shadow-2xl hover:shadow-level-5/20 transition-all duration-300 hover:-translate-y-1"
             >
               {/* Product Image Container */}
               <div className="relative h-52 overflow-hidden flex items-center justify-center p-4 bg-level-2/60">
