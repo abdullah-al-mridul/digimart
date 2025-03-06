@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import {
   Facebook,
   Twitter,
@@ -38,9 +38,29 @@ const Footer = () => {
     { icon: <Instagram className="w-5 h-5" />, href: "#" },
     { icon: <Youtube className="w-5 h-5" />, href: "#" },
   ];
+  const footerRef = useRef(null);
 
+  useEffect(() => {
+    const updateFooterHeight = () => {
+      if (footerRef.current) {
+        const height = footerRef.current.offsetHeight;
+        document.documentElement.style.setProperty(
+          "--footer-height",
+          `${height}px`
+        );
+      }
+    };
+
+    // Resize Observer to detect height changes
+    const resizeObserver = new ResizeObserver(updateFooterHeight);
+    if (footerRef.current) resizeObserver.observe(footerRef.current);
+
+    updateFooterHeight(); // Initial height set
+
+    return () => resizeObserver.disconnect(); // Cleanup observer
+  }, []);
   return (
-    <footer>
+    <footer ref={footerRef}>
       <div>
         <div className="container mx-auto border-2 border-dashed border-level-4 border-t-0 border-b-0">
           <div className=" p-8">

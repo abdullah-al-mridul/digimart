@@ -1,8 +1,29 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { ShoppingCart } from "lucide-react";
 const Header = () => {
+  const headerRef = useRef(null);
+
+  useEffect(() => {
+    const updateHeaderHeight = () => {
+      if (headerRef.current) {
+        const height = headerRef.current.offsetHeight;
+        document.documentElement.style.setProperty(
+          "--header-height",
+          `${height}px`
+        );
+      }
+    };
+
+    // Resize Observer to detect height changes
+    const resizeObserver = new ResizeObserver(updateHeaderHeight);
+    if (headerRef.current) resizeObserver.observe(headerRef.current);
+
+    updateHeaderHeight(); // Initial height set
+
+    return () => resizeObserver.disconnect(); // Cleanup observer
+  }, []);
   return (
-    <div className="border-b-2 border-dashed border-level-4">
+    <div ref={headerRef} className="border-b-2 border-dashed border-level-4">
       <div className="container mx-auto px-4 border-l-2 border-r-2 border-dashed border-level-4 py-4">
         <div className="flex items-center justify-between">
           <div className="text-3xl font-extrabold text-level-5 cursor-pointer tracking-tight">

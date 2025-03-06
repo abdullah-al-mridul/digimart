@@ -2,18 +2,13 @@ import React, { useState } from "react";
 import { Eye, EyeOff, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const Register = () => {
+const Login = () => {
   const [formData, setFormData] = useState({
-    username: "",
     email: "",
     password: "",
-    confirmPassword: "",
   });
 
-  const [showPassword, setShowPassword] = useState({
-    password: false,
-    confirmPassword: false,
-  });
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,21 +20,27 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add your registration logic here
+    // Add your login logic here
     console.log(formData);
   };
 
   return (
     <div className="flex items-center border-b-2 border-level-4 border-dashed justify-center">
-      <div className=" container min-h-[calc(100dvh-calc(var(--header-height)+var(--footer-height)+2px))] mx-auto border-r-2 border-l-2 border-level-4 border-dashed p-8">
+      <div
+        // style={{
+        //   minHeight: `calc(100vh-var(--header-height))`,
+        //     minHeight: "100vh",
+        // }}
+        className="container min-h-[calc(100dvh-calc(var(--header-height)+var(--footer-height)+2px))] mx-auto border-r-2 border-l-2 border-level-4 border-dashed p-8"
+      >
         <div className="max-w-md w-full space-y-8 mx-auto">
           {/* Header */}
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-level-5">Create Account</h2>
+            <h2 className="text-3xl font-bold text-level-5">Welcome Back</h2>
             <p className="mt-2 text-sm text-level-5/70">
-              Already have an account?{" "}
-              <Link to="/login" className="text-level-5 hover:underline">
-                Sign in
+              New to our platform?{" "}
+              <Link to="/register" className="text-level-5 hover:underline">
+                Create an account
               </Link>
             </p>
           </div>
@@ -47,26 +48,6 @@ const Register = () => {
           {/* Form */}
           <form onSubmit={handleSubmit} className="mt-8 space-y-6">
             <div className="space-y-4">
-              {/* Username */}
-              <div>
-                <label
-                  htmlFor="username"
-                  className="text-sm font-medium text-level-5"
-                >
-                  Username
-                </label>
-                <input
-                  id="username"
-                  name="username"
-                  type="text"
-                  required
-                  value={formData.username}
-                  onChange={handleChange}
-                  className="mt-1 block w-full px-3 py-2 bg-transparent border-2 border-dashed border-level-4 rounded-md text-level-5 placeholder-level-5/50 focus:outline-none focus:border-level-5 transition-colors"
-                  placeholder="Enter your username"
-                />
-              </div>
-
               {/* Email */}
               <div>
                 <label
@@ -99,7 +80,7 @@ const Register = () => {
                   <input
                     id="password"
                     name="password"
-                    type={showPassword.password ? "text" : "password"}
+                    type={showPassword ? "text" : "password"}
                     required
                     value={formData.password}
                     onChange={handleChange}
@@ -108,15 +89,10 @@ const Register = () => {
                   />
                   <button
                     type="button"
-                    onClick={() =>
-                      setShowPassword((prev) => ({
-                        ...prev,
-                        password: !prev.password,
-                      }))
-                    }
+                    onClick={() => setShowPassword(!showPassword)}
                     className="absolute inset-y-0 right-0 pr-3 flex items-center text-level-5"
                   >
-                    {showPassword.password ? (
+                    {showPassword ? (
                       <EyeOff className="h-5 w-5" />
                     ) : (
                       <Eye className="h-5 w-5" />
@@ -125,43 +101,32 @@ const Register = () => {
                 </div>
               </div>
 
-              {/* Confirm Password */}
-              <div>
-                <label
-                  htmlFor="confirmPassword"
-                  className="text-sm font-medium text-level-5"
-                >
-                  Confirm Password
-                </label>
-                <div className="mt-1 relative">
+              {/* Remember Me & Forgot Password */}
+              {/* <div className="flex items-center justify-between">
+                <div className="flex items-center">
                   <input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type={showPassword.confirmPassword ? "text" : "password"}
-                    required
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    className="block w-full px-3 py-2 bg-transparent border-2 border-dashed border-level-4 rounded-md text-level-5 placeholder-level-5/50 focus:outline-none focus:border-level-5 transition-colors"
-                    placeholder="Confirm your password"
+                    id="remember-me"
+                    name="remember-me"
+                    type="checkbox"
+                    className="h-4 w-4 text-level-5 border-2 border-dashed border-level-4 rounded bg-transparent focus:ring-level-5"
                   />
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setShowPassword((prev) => ({
-                        ...prev,
-                        confirmPassword: !prev.confirmPassword,
-                      }))
-                    }
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-level-5"
+                  <label
+                    htmlFor="remember-me"
+                    className="ml-2 block text-sm text-level-5"
                   >
-                    {showPassword.confirmPassword ? (
-                      <EyeOff className="h-5 w-5" />
-                    ) : (
-                      <Eye className="h-5 w-5" />
-                    )}
-                  </button>
+                    Remember me
+                  </label>
                 </div>
-              </div>
+
+                <div className="text-sm">
+                  <Link
+                    to="/forgot-password"
+                    className="text-level-5 hover:underline"
+                  >
+                    Forgot password?
+                  </Link>
+                </div>
+              </div> */}
             </div>
 
             {/* Submit Button */}
@@ -169,7 +134,7 @@ const Register = () => {
               type="submit"
               className="group relative w-full flex justify-center py-3 px-4 border-2 border-dashed border-level-5 text-level-5 font-medium rounded-md hover:bg-level-5 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-level-5 transition-colors"
             >
-              Create Account
+              Sign In
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </button>
           </form>
@@ -179,4 +144,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Login;
