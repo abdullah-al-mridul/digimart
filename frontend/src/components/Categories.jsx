@@ -103,9 +103,9 @@ const Categories = () => {
           {categories.map((item) => (
             <div
               key={item.id}
-              className="bg-level-3 hover:translate-y-[-5px] transition-transform rounded-xl p-6 cursor-pointer "
+              className="bg-level-3 group hover:translate-y-[-5px] transition-transform rounded-xl p-6 cursor-pointer "
             >
-              <div className="flex flex-col h-35 justify-between group">
+              <div className="flex flex-col h-35 justify-between ">
                 <h2 className="text-2xl font-semibold text-white mb-4">
                   {item.name}
                 </h2>
