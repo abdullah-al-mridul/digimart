@@ -44,4 +44,5 @@ server.use("/api/v1/payment", paymentRouter);
 server.use("/api/v1/admin", adminRouter);
 server.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
+  console.log("FRONTEND_URL", process.env.FRONTEND_URL);
 });
