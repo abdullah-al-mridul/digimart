@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Star, ShoppingCart, MoveRight } from "lucide-react";
 import store from "../store/store";
+import { Link } from "react-router-dom";
 
 const TopProducts = () => {
   const { products, getProducts, productsLoading } = store();
@@ -188,7 +189,8 @@ const TopProducts = () => {
         {/* Products Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {products.map((product, index) => (
-            <div
+            <Link
+              to={`/product/${product._id}`}
               key={index}
               className="border-2 border-level-4 rounded-xl overflow-hidden group cursor-pointer hover:shadow-2xl hover:shadow-level-5/20 transition-all duration-300 hover:-translate-y-1"
             >
@@ -268,7 +270,7 @@ const TopProducts = () => {
                   <ShoppingCart className="w-5 h-5 transform  transition-transform" />
                 </button>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

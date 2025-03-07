@@ -2,6 +2,7 @@ import { MoveRight } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import NumberFlow from "@number-flow/react";
 import store from "../store/store";
+import { Link } from "react-router-dom";
 
 const Categories = () => {
   const { categoriesLoading, categories, getCategories } = store();
@@ -70,8 +71,9 @@ const Categories = () => {
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 w-full  gap-4">
           {categories.map((item) => (
-            <div
-              key={item.id}
+            <Link
+              to={`/category/${item._id}`}
+              key={item._id}
               className="bg-level-3 group hover:translate-y-[-5px] transition-transform rounded-xl p-6 cursor-pointer "
             >
               <div className="flex flex-col h-35 justify-between ">
@@ -83,13 +85,13 @@ const Categories = () => {
                     <MoveRight className="w-10 h-10 text-white group-hover:-rotate-45 transition-all" />
                   </div>
                   <img
-                    src={`/${item.image}`}
+                    src={`${item.image}`}
                     alt={item.title}
                     className="w-20 h-20 rounded-2xl flex-1 object-cover"
                   />
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

@@ -102,11 +102,53 @@ const App = () => {
           <Toaster
             toastOptions={{
               className: "",
-              // style: {
-              //   background: "red",
-              // },
+              style: {
+                background: "#a294f9",
+                color: "#907ffd",
+                border: "2px dashed #a294f9",
+                borderRadius: "12px",
+                padding: "16px",
+              },
+              success: {
+                style: {
+                  background: "#e5d9f2",
+                  border: "2px dashed #22c55e",
+                },
+                iconTheme: {
+                  primary: "#22c55e",
+                  secondary: "#f5efff",
+                },
+              },
+              error: {
+                style: {
+                  background: "#e5d9f2",
+                  border: "2px dashed #ef4444",
+                },
+                iconTheme: {
+                  primary: "#ef4444",
+                  secondary: "#f5efff",
+                },
+              },
+              loading: {
+                style: {
+                  background: "#e5d9f2",
+                  border: "2px dashed #a294f9",
+                },
+                iconTheme: {
+                  primary: "#907ffd",
+                  secondary: "#f5efff",
+                },
+              },
             }}
             position="bottom-left"
+            reverseOrder={false}
+            gutter={8}
+            containerStyle={{
+              bottom: 40,
+              left: 20,
+              margin: "0px",
+            }}
+            toastClassName=""
           />
         </div>
       </div>

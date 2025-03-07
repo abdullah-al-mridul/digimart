@@ -1083,7 +1083,11 @@ const Controll = () => {
                 >
                   <div className="flex gap-4">
                     <div className="w-20 h-20 bg-level-3 rounded-xl flex items-center justify-center">
-                      <ImageIcon className="w-8 h-8 text-level-5/50" />
+                      <img
+                        src={category.image}
+                        alt={category.name}
+                        className="w-full h-full object-cover rounded-xl"
+                      />
                     </div>
                     <div className="flex-1">
                       <h3 className="text-xl font-semibold text-level-5">
@@ -1135,7 +1139,11 @@ const Controll = () => {
                       <td className="p-4">
                         <div className="flex items-center gap-3">
                           <div className="w-12 h-12 bg-level-3 rounded-lg flex items-center justify-center">
-                            <ImageIcon className="w-6 h-6 text-level-5/50" />
+                            <img
+                              src={product.images[0]}
+                              alt={product.name}
+                              className="w-full h-full object-cover rounded-xl"
+                            />
                           </div>
                           <div>
                             <h4 className="font-medium text-level-5">

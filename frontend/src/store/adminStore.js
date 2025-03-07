@@ -133,6 +133,7 @@ const adminStore = create((set, get) => ({
       form.append("brand", newProductData.brand);
       form.append("category", newProductData.category);
       form.append("discount", newProductData.discount);
+      form.append("rating", newProductData.rating);
       newProductData.images.forEach((image) => {
         form.append("images", image);
       });
@@ -187,6 +188,7 @@ const adminStore = create((set, get) => ({
       form.append("brand", updateProductData.brand);
       form.append("category", updateProductData.category);
       form.append("discount", updateProductData.discount);
+      form.append("rating", updateProductData.rating);
       updateProductData.images.forEach((image) => {
         form.append("images", image);
       });

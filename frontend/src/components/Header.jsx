@@ -45,12 +45,15 @@ const Header = () => {
     <div ref={headerRef} className="border-b-2 border-dashed border-level-4">
       <div className="container mx-auto px-4 border-l-2 border-r-2 border-dashed border-level-4 py-4">
         <div className="flex items-center justify-between">
-          <div className="text-3xl font-extrabold text-level-5 cursor-pointer tracking-tight">
+          <Link
+            to={"/"}
+            className="text-3xl font-extrabold text-level-5 cursor-pointer tracking-tight"
+          >
             <span className="bg-gradient-to-r from-level-4 to-level-5 text-transparent bg-clip-text">
               DIGI
             </span>
             <span className="text-level-5">MART</span>
-          </div>
+          </Link>
           <div>
             <ul className="flex items-center gap-6">
               <li>
