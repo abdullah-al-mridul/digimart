@@ -82,7 +82,7 @@ const Header = () => {
                     className="px-4 gap-0.5 cursor-pointer py-2 bg-level-5 text-white rounded-lg transition-colors flex items-center justify-center"
                   >
                     <User className="h-5" />
-                    <span className=" hidden">Account</span>
+                    <span className=" hidden sm:block">Account</span>
                   </button>
 
                   {/* Dropdown Menu */}

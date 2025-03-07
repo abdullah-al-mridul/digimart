@@ -231,7 +231,7 @@ const Category = () => {
                     className="border-2 border-level-4 rounded-xl overflow-hidden group cursor-pointer transition-all duration-300 hover:-translate-y-1"
                   >
                     {/* Product Image */}
-                    <Link to={`/product/${product.slug}`}>
+                    <Link to={`/product/${product._id}`}>
                       <div className="relative h-52 overflow-hidden flex items-center justify-center p-4 bg-level-2/60">
                         <img
                           src={product.images[0]}
