@@ -482,6 +482,34 @@ const UpdateProductForm = memo(
     );
   }
 );
+const ControlSkeleton = () => {
+  return (
+    <div className="border-level-4 border-dashed border-b-2">
+      <div className="container mx-auto min-h-[calc(100dvh-calc(var(--header-height)+var(--footer-height)+2px))] border-l-2 border-r-2 border-dashed border-level-4 py-8 px-8">
+        {/* Title Skeleton */}
+        <div className="h-10 w-48 bg-level-3/50 animate-pulse rounded-lg ml-7 relative before:content-[''] before:w-5 before:h-full before:bg-level-3/50 before:rounded-sm before:inline-block before:mr-2 before:absolute before:top-0 before:-left-7 mb-8"></div>
+
+        {/* Grid Skeleton */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[1, 2, 3, 4, 5, 6].map((item) => (
+            <div
+              key={item}
+              className="border-2 border-dashed border-level-4 rounded-xl p-6 bg-level-2/60 animate-pulse"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-level-3/50 rounded-xl"></div>
+                <div className="flex-1">
+                  <div className="h-6 w-32 bg-level-3/50 rounded-lg mb-2"></div>
+                  <div className="h-4 w-24 bg-level-3/50 rounded-lg"></div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const Controll = () => {
   const {
@@ -664,7 +692,7 @@ const Controll = () => {
     }));
   };
 
-  if (loadingControl) return <div>loading</div>;
+  if (loadingControl) return <ControlSkeleton />;
   return (
     <div className="border-level-4 border-dashed border-b-2">
       <div className="container mx-auto min-h-[calc(100dvh-calc(var(--header-height)+var(--footer-height)+2px))] border-l-2 border-r-2 border-dashed border-level-4 py-8 px-8">
