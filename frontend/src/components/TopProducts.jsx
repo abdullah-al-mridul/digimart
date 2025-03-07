@@ -4,6 +4,71 @@ import store from "../store/store";
 import { Link, useNavigate } from "react-router-dom";
 import cartStore from "../store/cartStore";
 
+const TopProductsSkeleton = () => {
+  return (
+    <div className="border-b-2 border-dashed border-level-4">
+      <div className="container mx-auto border-2 border-dashed border-level-4 border-t-0 border-b-0 p-4">
+        {/* Header Section Skeleton */}
+        <div className="h-10 w-48 bg-level-3/50 animate-pulse rounded-lg ml-7 relative before:content-[''] before:w-5 before:h-full before:bg-level-3/50 before:rounded-sm before:inline-block before:mr-2 before:absolute before:top-0 before:-left-7 mb-4"></div>
+
+        {/* Products Grid Skeleton */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[1, 2, 3, 4].map((item) => (
+            <div
+              key={item}
+              className="border-2 border-level-4 rounded-xl overflow-hidden"
+            >
+              {/* Product Image Skeleton */}
+              <div className="relative h-52 overflow-hidden flex items-center justify-center p-4 bg-level-2/60">
+                <div className="w-11/12 h-11/12 rounded-xl bg-level-3/50 animate-pulse"></div>
+                {/* Discount Badge Skeleton */}
+                <div className="absolute top-5 left-5 h-6 w-16 bg-level-3/50 animate-pulse rounded-lg transform -rotate-12"></div>
+              </div>
+
+              {/* Product Info Skeleton */}
+              <div className="p-5 space-y-4">
+                {/* Category & Brand Skeleton */}
+                <div className="flex justify-between items-center">
+                  <div className="h-6 w-20 bg-level-3/50 animate-pulse rounded-sm"></div>
+                  <div className="h-6 w-20 bg-level-3/50 animate-pulse rounded-sm"></div>
+                </div>
+
+                {/* Product Name Skeleton */}
+                <div className="h-7 w-3/4 bg-level-3/50 animate-pulse rounded-lg"></div>
+
+                {/* Rating Skeleton */}
+                <div className="flex items-center gap-1">
+                  <div className="flex gap-0.5">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <div
+                        key={star}
+                        className="w-4 h-4 bg-level-3/50 animate-pulse rounded"
+                      ></div>
+                    ))}
+                  </div>
+                  <div className="h-4 w-12 bg-level-3/50 animate-pulse rounded ml-2"></div>
+                </div>
+
+                {/* Price & Stock Skeleton */}
+                <div className="flex justify-between items-center pt-2">
+                  <div className="space-y-1">
+                    <div className="h-8 w-24 bg-level-3/50 animate-pulse rounded-lg"></div>
+                    <div className="h-5 w-20 bg-level-3/50 animate-pulse rounded-lg"></div>
+                  </div>
+                  <div className="h-6 w-20 bg-level-3/50 animate-pulse rounded-full"></div>
+                </div>
+
+                {/* Add to Cart Button Skeleton */}
+                <div className="h-12 w-full bg-level-3/50 animate-pulse rounded-xl"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const TopProducts = () => {
   const navigate = useNavigate();
   const { products, getProducts, productsLoading } = store();
@@ -11,176 +76,12 @@ const TopProducts = () => {
   useEffect(() => {
     getProducts();
   }, []);
-  //   const products = [
-  //     {
-  //       name: "bettary",
-  //       description: "bettary description",
-  //       price: 10000,
-  //       images: [
-  //         "https://res.cloudinary.com/dj5cslczv/image/upload/v1741166875/products/images-1741166874529-296506118_vmn6ge.png",
-  //       ],
-  //       category: {
-  //         _id: "67c7cc7a89578bbb5bd2a16b",
-  //         name: "Tech",
-  //         description: "tech releated products",
-  //         image: "default-category.png",
-  //         isActive: true,
-  //         createdAt: "2025-03-05T04:00:58.067Z",
-  //         updatedAt: "2025-03-05T04:00:58.067Z",
-  //         slug: "tech",
-  //         __v: 0,
-  //       },
-  //       brand: "tech",
-  //       stock: 10,
-  //       rating: 4,
-  //       discount: 10,
-  //       isFeatured: true,
-  //       createdAt: "2025-03-05T09:27:56.384Z",
-  //       updatedAt: "2025-03-06T03:39:27.034Z",
-  //       slug: "bettary",
-  //     },
-  //     {
-  //       name: "bettary",
-  //       description: "bettary description",
-  //       price: 10000,
-  //       images: [
-  //         "https://res.cloudinary.com/dj5cslczv/image/upload/v1741166875/products/images-1741166874529-296506118_vmn6ge.png",
-  //       ],
-  //       category: {
-  //         _id: "67c7cc7a89578bbb5bd2a16b",
-  //         name: "Tech",
-  //         description: "tech releated products",
-  //         image: "default-category.png",
-  //         isActive: true,
-  //         createdAt: "2025-03-05T04:00:58.067Z",
-  //         updatedAt: "2025-03-05T04:00:58.067Z",
-  //         slug: "tech",
-  //         __v: 0,
-  //       },
-  //       brand: "tech",
-  //       stock: 10,
-  //       rating: 0,
-  //       discount: 10,
-  //       isFeatured: true,
-  //       createdAt: "2025-03-05T09:27:56.384Z",
-  //       updatedAt: "2025-03-06T03:39:27.034Z",
-  //       slug: "bettary",
-  //     },
-  //     {
-  //       name: "bettary",
-  //       description: "bettary description",
-  //       price: 10000,
-  //       images: [
-  //         "https://res.cloudinary.com/dj5cslczv/image/upload/v1741166875/products/images-1741166874529-296506118_vmn6ge.png",
-  //       ],
-  //       category: {
-  //         _id: "67c7cc7a89578bbb5bd2a16b",
-  //         name: "Tech",
-  //         description: "tech releated products",
-  //         image: "default-category.png",
-  //         isActive: true,
-  //         createdAt: "2025-03-05T04:00:58.067Z",
-  //         updatedAt: "2025-03-05T04:00:58.067Z",
-  //         slug: "tech",
-  //         __v: 0,
-  //       },
-  //       brand: "tech",
-  //       stock: 10,
-  //       rating: 0,
-  //       discount: 10,
-  //       isFeatured: true,
-  //       createdAt: "2025-03-05T09:27:56.384Z",
-  //       updatedAt: "2025-03-06T03:39:27.034Z",
-  //       slug: "bettary",
-  //     },
-  //     {
-  //       name: "bettary",
-  //       description: "bettary description",
-  //       price: 10000,
-  //       images: [
-  //         "https://res.cloudinary.com/dj5cslczv/image/upload/v1741166875/products/images-1741166874529-296506118_vmn6ge.png",
-  //       ],
-  //       category: {
-  //         _id: "67c7cc7a89578bbb5bd2a16b",
-  //         name: "Tech",
-  //         description: "tech releated products",
-  //         image: "default-category.png",
-  //         isActive: true,
-  //         createdAt: "2025-03-05T04:00:58.067Z",
-  //         updatedAt: "2025-03-05T04:00:58.067Z",
-  //         slug: "tech",
-  //         __v: 0,
-  //       },
-  //       brand: "tech",
-  //       stock: 10,
-  //       rating: 0,
-  //       discount: 10,
-  //       isFeatured: true,
-  //       createdAt: "2025-03-05T09:27:56.384Z",
-  //       updatedAt: "2025-03-06T03:39:27.034Z",
-  //       slug: "bettary",
-  //     },
-  //     {
-  //       name: "bettary",
-  //       description: "bettary description",
-  //       price: 10000,
-  //       images: [
-  //         "https://res.cloudinary.com/dj5cslczv/image/upload/v1741166875/products/images-1741166874529-296506118_vmn6ge.png",
-  //       ],
-  //       category: {
-  //         _id: "67c7cc7a89578bbb5bd2a16b",
-  //         name: "Tech",
-  //         description: "tech releated products",
-  //         image: "default-category.png",
-  //         isActive: true,
-  //         createdAt: "2025-03-05T04:00:58.067Z",
-  //         updatedAt: "2025-03-05T04:00:58.067Z",
-  //         slug: "tech",
-  //         __v: 0,
-  //       },
-  //       brand: "tech",
-  //       stock: 10,
-  //       rating: 0,
-  //       discount: 10,
-  //       isFeatured: true,
-  //       createdAt: "2025-03-05T09:27:56.384Z",
-  //       updatedAt: "2025-03-06T03:39:27.034Z",
-  //       slug: "bettary",
-  //     },
-  //     {
-  //       name: "bettary",
-  //       description: "bettary description",
-  //       price: 10000,
-  //       images: [
-  //         "https://res.cloudinary.com/dj5cslczv/image/upload/v1741166875/products/images-1741166874529-296506118_vmn6ge.png",
-  //       ],
-  //       category: {
-  //         _id: "67c7cc7a89578bbb5bd2a16b",
-  //         name: "Tech",
-  //         description: "tech releated products",
-  //         image: "default-category.png",
-  //         isActive: true,
-  //         createdAt: "2025-03-05T04:00:58.067Z",
-  //         updatedAt: "2025-03-05T04:00:58.067Z",
-  //         slug: "tech",
-  //         __v: 0,
-  //       },
-  //       brand: "tech",
-  //       stock: 10,
-  //       rating: 0,
-  //       discount: 10,
-  //       isFeatured: true,
-  //       createdAt: "2025-03-05T09:27:56.384Z",
-  //       updatedAt: "2025-03-06T03:39:27.034Z",
-  //       slug: "bettary",
-  //     },
-  //   ];
 
   // Function to format price with commas
   const formatPrice = (price) => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
-  if (productsLoading) return <div>loading</div>;
+  if (productsLoading) return <TopProductsSkeleton />;
   return (
     <div className="border-b-2 border-dashed border-level-4">
       <div className="container mx-auto border-2 border-dashed border-level-4 border-t-0 border-b-0 p-4">

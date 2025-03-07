@@ -4,6 +4,46 @@ import NumberFlow from "@number-flow/react";
 import store from "../store/store";
 import { Link } from "react-router-dom";
 
+const CategoriesSkeleton = () => {
+  return (
+    <div className="border-b-2 border-dashed border-level-4">
+      <div className="container mx-auto border-2 border-dashed border-level-4 border-t-0 border-b-0 p-4">
+        <div className="flex gap-5 items-center mb-4">
+          <div className="h-10 w-48 bg-level-3/50 animate-pulse rounded-lg ml-7 relative before:content-[''] before:w-5 before:h-full before:bg-level-3/50 before:rounded-sm before:inline-block before:mr-2 before:absolute before:top-0 before:-left-7"></div>
+          <div className="flex items-center gap-4">
+            <div className="flex flex-col">
+              <div className="h-5 w-32 bg-level-3/50 animate-pulse rounded-lg mb-2"></div>
+              <div className="flex gap-2">
+                <div className="h-8 w-10 bg-level-3/50 animate-pulse rounded-lg"></div>
+                <div className="h-8 w-2 bg-level-3/50 animate-pulse rounded-lg"></div>
+                <div className="h-8 w-10 bg-level-3/50 animate-pulse rounded-lg"></div>
+                <div className="h-8 w-2 bg-level-3/50 animate-pulse rounded-lg"></div>
+                <div className="h-8 w-10 bg-level-3/50 animate-pulse rounded-lg"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 w-full gap-4">
+          {[1, 2, 3, 4].map((item) => (
+            <div
+              key={item}
+              className="bg-level-3 rounded-xl p-6 cursor-pointer"
+            >
+              <div className="flex flex-col h-35 justify-between">
+                <div className="h-8 w-32 bg-level-4/50 animate-pulse rounded-lg mb-4"></div>
+                <div className="flex gap-5 justify-between items-center">
+                  <div className="h-10 w-10 bg-level-4/50 animate-pulse rounded-2xl"></div>
+                  <div className="w-20 h-20 bg-level-4/50 animate-pulse rounded-2xl"></div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Categories = () => {
   const { categoriesLoading, categories, getCategories } = store();
   useEffect(() => {
@@ -42,7 +82,7 @@ const Categories = () => {
 
     return () => clearInterval(timer);
   }, []);
-  if (categoriesLoading) return <div>loading</div>;
+  if (categoriesLoading) return <CategoriesSkeleton />;
   return (
     <div className=" border-b-2 border-dashed border-level-4">
       <div className=" container mx-auto border-2 border-dashed border-level-4 border-t-0 border-b-0  p-4">
