@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ChevronDown, ChevronUp, Star, ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
 

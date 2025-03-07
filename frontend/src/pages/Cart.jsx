@@ -1,41 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 import NumberFlow from "@number-flow/react";
 import { Link } from "react-router-dom";
+import cartStore from "../store/cartStore";
 
 const Cart = () => {
-  const cart = {
-    _id: "67c9a427652c0ffecd74768a",
-    user: "67c5986f7129094499c51b98",
-    items: [
-      {
-        product: {
-          _id: "67c8191c68175954d604f8fa",
-          name: "bettary",
-          description: "bettary description okay",
-          price: 10000,
-          images: [
-            "https://res.cloudinary.com/dj5cslczv/image/upload/v1741262389/products/images-1741262388773-268977497_xplciq.png",
-          ],
-          category: "67c5bdb98690000e3abde1a6",
-          brand: "tech",
-          stock: 10,
-          rating: 0,
-          discount: 80,
-          isFeatured: true,
-          slug: "bettary",
-        },
-        quantity: 2,
-        _id: "67c9a427652c0ffecd74768c",
-      },
-    ],
-    totalPrice: 20000,
-  };
-
+  const { cart, loading, getCart } = cartStore();
+  useEffect(() => {
+    getCart();
+  }, []);
+  useEffect(() => {
+    console.log(cart);
+  }, [cart]);
   const formatPrice = (price) => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
-
+  //   return null;
+  if (loading) return <div>loading</div>;
   return (
     <div className="border-level-4 border-dashed border-b-2">
       <div className="container mx-auto min-h-[calc(100dvh-calc(var(--header-height)+var(--footer-height)+2px))] border-l-2 border-r-2 border-dashed border-level-4 py-8 px-8">

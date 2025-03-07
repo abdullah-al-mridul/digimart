@@ -1,47 +1,16 @@
 import { MoveRight } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import NumberFlow from "@number-flow/react";
-
-const categories = [
-  {
-    id: 1,
-    name: "Tech",
-    description: "tech releated products ",
-    image: "default-category.png",
-  },
-  {
-    id: 2,
-    name: "Tech",
-    description: "tech releated products ",
-    image: "default-category.png",
-  },
-  {
-    id: 3,
-    name: "Tech",
-    description: "tech releated products ",
-    image: "default-category.png",
-  },
-  {
-    id: 4,
-    name: "Tech",
-    description: "tech releated products ",
-    image: "default-category.png",
-  },
-  {
-    id: 5,
-    name: "Tech",
-    description: "tech releated products ",
-    image: "default-category.png",
-  },
-  {
-    id: 6,
-    name: "Tech",
-    description: "tech releated products ",
-    image: "default-category.png",
-  },
-];
+import store from "../store/store";
 
 const Categories = () => {
+  const { categoriesLoading, categories, getCategories } = store();
+  useEffect(() => {
+    getCategories();
+  }, []);
+  useEffect(() => {
+    console.log(categories);
+  }, [categories]);
   const [timeLeft, setTimeLeft] = useState({
     hours: 12,
     minutes: 45,
@@ -72,7 +41,7 @@ const Categories = () => {
 
     return () => clearInterval(timer);
   }, []);
-
+  if (categoriesLoading) return <div>loading</div>;
   return (
     <div className=" border-b-2 border-dashed border-level-4">
       <div className=" container mx-auto border-2 border-dashed border-level-4 border-t-0 border-b-0  p-4">

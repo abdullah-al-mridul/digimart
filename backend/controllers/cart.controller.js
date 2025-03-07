@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Cart from "../models/cart.model.js";
 import Product from "../models/product.model.js";
 import User from "../models/user.model.js";
@@ -5,7 +6,12 @@ import User from "../models/user.model.js";
 export const addToCart = async (req, res) => {
   try {
     const { productId, quantity } = req.body;
-
+    if (!mongoose.Types.ObjectId.isValid(productId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid product ID",
+      });
+    }
     // Validate product exists and has enough stock
     const product = await Product.findById(productId);
     if (!product) {
@@ -15,7 +21,7 @@ export const addToCart = async (req, res) => {
       });
     }
 
-    if (product.countInStock < quantity) {
+    if (product.stock < quantity) {
       return res.status(400).json({
         success: false,
         message: "Not enough stock available",

@@ -7,6 +7,7 @@ const adminStore = create((set) => ({
   orders: [],
   categories: [],
   loadingControl: true,
+  products: [],
   getDashboard: async () => {
     set({
       loading: true,
@@ -26,14 +27,19 @@ const adminStore = create((set) => ({
       });
     }
   },
-  getCategories: async () => {
+  getControl: async () => {
     set({
       loadingControl: true,
     });
     try {
       const res = await api.get("/categories");
+      const products = await api.get("/products");
+
       set({
         categories: res.categories,
+      });
+      set({
+        products: products.products,
       });
     } catch (err) {
       console.log(err);

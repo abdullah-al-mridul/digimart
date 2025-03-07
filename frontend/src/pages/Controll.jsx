@@ -13,7 +13,7 @@ import {
 import adminStore from "../store/adminStore";
 
 const Controll = () => {
-  const { categories, loadingControl, getCategories } = adminStore();
+  const { categories, loadingControl, getControl, products } = adminStore();
   const [activeTab, setActiveTab] = useState("categories"); // or "products"
   const [searchTerm, setSearchTerm] = useState("");
   const [showAddForm, setShowAddForm] = useState(false);
@@ -22,34 +22,11 @@ const Controll = () => {
   const addFileInputRef = useRef(null);
   const updateFileInputRef = useRef(null);
   useEffect(() => {
-    getCategories();
+    getControl();
   }, []);
   useEffect(() => {
-    console.log(categories);
-  }, [categories]);
-  //   // Sample data (replace with your actual data and API calls)
-  //   const categories = [
-  //     {
-  //       id: 1,
-  //       name: "Tech",
-  //       description: "Tech related products",
-  //       image: "default-category.png",
-  //     },
-  //     // ... more categories
-  //   ];
-
-  const products = [
-    {
-      id: 1,
-      name: "Product 1",
-      price: 20000,
-      description: "Product description",
-      image: "default-product.png",
-      category: "Tech",
-      stock: 10,
-    },
-    // ... more products
-  ];
+    console.log(products);
+  }, [products]);
 
   // Add Form Data
   const [addFormData, setAddFormData] = useState({
@@ -870,7 +847,7 @@ const Controll = () => {
                 <tbody>
                   {products.map((product) => (
                     <tr
-                      key={product.id}
+                      key={product._id}
                       className="border-b border-dashed border-level-4 last:border-none hover:bg-level-2/60"
                     >
                       <td className="p-4">
@@ -888,7 +865,9 @@ const Controll = () => {
                           </div>
                         </div>
                       </td>
-                      <td className="p-4 text-level-5">{product.category}</td>
+                      <td className="p-4 text-level-5">
+                        {product.category.name}
+                      </td>
                       <td className="p-4 text-level-5">৳{product.price}</td>
                       <td className="p-4 text-level-5">{product.stock}</td>
                       <td className="p-4">
