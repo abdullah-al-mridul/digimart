@@ -1,42 +1,51 @@
 import React, { useEffect, useState } from "react";
 import { ChevronDown, ChevronUp, Star, ShoppingCart } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import categoryStore from "../store/categoryStore";
 
-const data = {
-  category: {
-    _id: "67c7cc7a89578bbb5bd2a16b",
-    name: "Tech",
-    description: "tech related products ",
-    image: "default-category.png",
-    isActive: true,
-    createdAt: "2025-03-05T04:00:58.067Z",
-    updatedAt: "2025-03-05T04:00:58.067Z",
-    slug: "tech",
-    __v: 0,
-  },
-  products: {
-    items: [
-      {
-        _id: "67c9ae98652c0ffecd7477bb",
-        name: "computer",
-        price: 10000,
-        images: [
-          "https://res.cloudinary.com/dj5cslczv/image/upload/v1741270677/products/images-1741270676685-965844949_x5arbu.png",
-        ],
-        stock: 10,
-        rating: 0,
-        discount: 10,
-        slug: "computer",
-      },
-    ],
-    currentPage: 1,
-    totalPages: 1,
-    totalItems: 1,
-    hasMore: false,
-  },
-};
+// const data = {
+//   category: {
+//     _id: "67c7cc7a89578bbb5bd2a16b",
+//     name: "Tech",
+//     description: "tech related products ",
+//     image: "default-category.png",
+//     isActive: true,
+//     createdAt: "2025-03-05T04:00:58.067Z",
+//     updatedAt: "2025-03-05T04:00:58.067Z",
+//     slug: "tech",
+//     __v: 0,
+//   },
+//   products: {
+//     items: [
+//       {
+//         _id: "67c9ae98652c0ffecd7477bb",
+//         name: "computer",
+//         price: 10000,
+//         images: [
+//           "https://res.cloudinary.com/dj5cslczv/image/upload/v1741270677/products/images-1741270676685-965844949_x5arbu.png",
+//         ],
+//         stock: 10,
+//         rating: 0,
+//         discount: 10,
+//         slug: "computer",
+//       },
+//     ],
+//     currentPage: 1,
+//     totalPages: 1,
+//     totalItems: 1,
+//     hasMore: false,
+//   },
+// };
 
 const Category = () => {
+  const { id } = useParams();
+  const { getCategory, data, loading } = categoryStore();
+  useEffect(() => {
+    getCategory(id);
+  }, [id]);
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
   const [filters, setFilters] = useState({
     price: [],
     brand: [],
@@ -44,9 +53,9 @@ const Category = () => {
   });
 
   const [expandedSections, setExpandedSections] = useState({
-    price: true,
-    brand: true,
-    rating: true,
+    price: false,
+    brand: false,
+    rating: false,
   });
 
   const filterOptions = {
@@ -75,6 +84,7 @@ const Category = () => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
+  if (loading) return <div>loading</div>;
   return (
     <div className="border-level-4 border-dashed border-b-2">
       <div className="container mx-auto min-h-[calc(100dvh-calc(var(--header-height)+var(--footer-height)+2px))] border-l-2 border-r-2 border-dashed border-level-4">
@@ -118,6 +128,9 @@ const Category = () => {
 
           {/* Products Grid */}
           <div className="lg:col-span-3 p-4">
+            <h1 className="text-2xl font-bold text-level-5 mb-4">
+              {data.category.name}
+            </h1>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {data.products.items.map((product) => {
                 const discountedPrice =
