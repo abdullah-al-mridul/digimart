@@ -67,7 +67,7 @@ const Header = () => {
                 >
                   <ShoppingCart className="w-6 h-6 text-level-4" />
                   <span className="absolute -top-1 -right-1 bg-level-5 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                    {loading ? "..." : cart.items.length}
+                    {loading && cart?.length < 1 ? "..." : cart?.items?.length}
                   </span>
                 </Link>
               </li>

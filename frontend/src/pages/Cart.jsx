@@ -94,7 +94,8 @@ const CartSkeleton = () => {
 };
 
 const Cart = () => {
-  const { cart, loading, getCart, updateCart, deleteCart } = cartStore();
+  const { cart, loading, getCart, updateCart, deleteCart, placeOrder } =
+    cartStore();
   const [showCheckoutForm, setShowCheckoutForm] = useState(false);
   const [checkoutData, setCheckoutData] = useState({
     shippingAddress: {
@@ -126,8 +127,9 @@ const Cart = () => {
   if (loading) return <CartSkeleton />;
   const handleCheckoutSubmit = (e) => {
     e.preventDefault();
+    setShowCheckoutForm(false);
     console.log("Checkout Data:", checkoutData);
-    // Add your checkout logic here
+    placeOrder(checkoutData);
   };
   return (
     <div className="border-level-4 border-dashed border-b-2">
@@ -273,7 +275,7 @@ const Cart = () => {
                   Payment Method
                 </h3>
                 <select
-                  value={checkoutData.paymentMethod}
+                  value={checkoutData.paymentMethod.type}
                   onChange={(e) =>
                     setCheckoutData((prev) => ({
                       ...prev,
@@ -320,7 +322,7 @@ const Cart = () => {
             </form>
           </div>
         )}
-        {cart.items.length > 0 ? (
+        {cart?.items?.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Cart Items */}
             <div className="lg:col-span-2 space-y-4">

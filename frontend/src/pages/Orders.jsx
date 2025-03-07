@@ -1,182 +1,116 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Package, Truck, CheckCircle, Clock, AlertCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+import ordersStore from "../store/ordersRoute";
 
-const orders = [
-  {
-    shippingAddress: {
-      street: "madrasamor",
-      city: "natore",
-      state: "rajshahi",
-      postalCode: "6400",
-      country: "Bangladesh",
-      phone: "+8801576969706",
-    },
-    paymentMethod: {
-      type: "cash_on_delivery",
-      details: "cash on delivery",
-    },
-    _id: "67c918eee7946eb9638efd43",
-    user: "67c5986f7129094499c51b98",
-    items: [
-      {
-        product: {
-          _id: "67c8191c68175954d604f8fa",
-          name: "bettary",
-          description: "bettary description  okay",
-          price: 10000,
-          images: [
-            "https://res.cloudinary.com/dj5cslczv/image/upload/v1741262389/products/images-1741262388773-268977497_xplciq.png",
-            "https://res.cloudinary.com/dj5cslczv/image/upload/v1741262390/products/images-1741262388776-340431677_bqbadr.png",
-            "https://res.cloudinary.com/dj5cslczv/image/upload/v1741262391/products/images-1741262388776-271590988_wmeynf.jpg",
-          ],
-          category: "67c5bdb98690000e3abde1a6",
-          brand: "tech",
-          stock: 10,
-          rating: 0,
-          discount: 80,
-          isFeatured: true,
-          createdAt: "2025-03-05T09:27:56.384Z",
-          updatedAt: "2025-03-06T11:59:53.388Z",
-          slug: "bettary",
-          __v: 0,
-        },
-        quantity: 2,
-        price: 10000,
-        _id: "67c918eee7946eb9638efd44",
-      },
-    ],
-    paymentStatus: "pending",
-    status: "processing",
-    totalAmount: 20000,
-    subtotal: 20000,
-    shippingCost: 0,
-    tax: 0,
-    total: 20000,
-    statusHistory: [
-      {
-        status: "processing",
-        date: "2025-03-06T05:46:02.918Z",
-        _id: "67c9369a7f882fbb2c9bf760",
-      },
-    ],
-    createdAt: "2025-03-06T03:39:26.965Z",
-    updatedAt: "2025-03-06T05:46:02.917Z",
-    __v: 1,
-  },
-  {
-    shippingAddress: {
-      street: "madrasamor",
-      city: "natore",
-      state: "rajshahi",
-      postalCode: "6400",
-      country: "Bangladesh",
-      phone: "+8801576969706",
-    },
-    paymentMethod: {
-      type: "cash_on_delivery",
-      details: "cash on delivery",
-    },
-    _id: "67c895cfd5ebf5020efaf113",
-    user: "67c5986f7129094499c51b98",
-    items: [
-      {
-        product: {
-          _id: "67c8191c68175954d604f8fa",
-          name: "bettary",
-          description: "bettary description  okay",
-          price: 10000,
-          images: [
-            "https://res.cloudinary.com/dj5cslczv/image/upload/v1741262389/products/images-1741262388773-268977497_xplciq.png",
-            "https://res.cloudinary.com/dj5cslczv/image/upload/v1741262390/products/images-1741262388776-340431677_bqbadr.png",
-            "https://res.cloudinary.com/dj5cslczv/image/upload/v1741262391/products/images-1741262388776-271590988_wmeynf.jpg",
-          ],
-          category: "67c5bdb98690000e3abde1a6",
-          brand: "tech",
-          stock: 10,
-          rating: 0,
-          discount: 80,
-          isFeatured: true,
-          createdAt: "2025-03-05T09:27:56.384Z",
-          updatedAt: "2025-03-06T11:59:53.388Z",
-          slug: "bettary",
-          __v: 0,
-        },
-        quantity: 2,
-        price: 10000,
-        _id: "67c895cfd5ebf5020efaf114",
-      },
-    ],
-    paymentStatus: "failed",
-    status: "pending",
-    totalAmount: 20000,
-    subtotal: 20000,
-    shippingCost: 0,
-    tax: 0,
-    total: 20000,
-    statusHistory: [],
-    createdAt: "2025-03-05T18:19:59.519Z",
-    updatedAt: "2025-03-06T03:37:28.368Z",
-    __v: 0,
-  },
-  {
-    shippingAddress: {
-      street: "madrasamor",
-      city: "natore",
-      state: "rajshahi",
-      postalCode: "6400",
-      country: "Bangladesh",
-      phone: "+8801576969706",
-    },
-    paymentMethod: {
-      type: "cash_on_delivery",
-      details: "cash on delivery",
-    },
-    _id: "67c82d21d9f3ed3d66c078fb",
-    user: "67c5986f7129094499c51b98",
-    items: [
-      {
-        product: {
-          _id: "67c8191c68175954d604f8fa",
-          name: "bettary",
-          description: "bettary description  okay",
-          price: 10000,
-          images: [
-            "https://res.cloudinary.com/dj5cslczv/image/upload/v1741262389/products/images-1741262388773-268977497_xplciq.png",
-            "https://res.cloudinary.com/dj5cslczv/image/upload/v1741262390/products/images-1741262388776-340431677_bqbadr.png",
-            "https://res.cloudinary.com/dj5cslczv/image/upload/v1741262391/products/images-1741262388776-271590988_wmeynf.jpg",
-          ],
-          category: "67c5bdb98690000e3abde1a6",
-          brand: "tech",
-          stock: 10,
-          rating: 0,
-          discount: 80,
-          isFeatured: true,
-          createdAt: "2025-03-05T09:27:56.384Z",
-          updatedAt: "2025-03-06T11:59:53.388Z",
-          slug: "bettary",
-          __v: 0,
-        },
-        quantity: 2,
-        price: 10000,
-        _id: "67c82d21d9f3ed3d66c078fc",
-      },
-    ],
-    paymentStatus: "paid",
-    status: "pending",
-    totalAmount: 20000,
-    subtotal: 20000,
-    shippingCost: 0,
-    tax: 0,
-    total: 20000,
-    statusHistory: [],
-    createdAt: "2025-03-05T10:53:21.481Z",
-    updatedAt: "2025-03-05T17:46:45.427Z",
-    __v: 0,
-  },
-];
+const OrdersSkeleton = () => {
+  return (
+    <div className="border-level-4 border-dashed border-b-2">
+      <div className="container mx-auto min-h-[calc(100dvh-calc(var(--header-height)+var(--footer-height)+2px))] border-l-2 border-r-2 border-dashed border-level-4 py-8 px-8">
+        {/* Title Skeleton */}
+        <div className="h-10 w-48 bg-level-3/50 animate-pulse rounded-lg ml-7 relative before:content-[''] before:w-5 before:h-full before:bg-level-3/50 before:rounded-sm before:inline-block before:mr-2 before:absolute before:top-0 before:-left-7 mb-8"></div>
+
+        {/* Orders List Skeleton */}
+        <div className="space-y-6">
+          {[1, 2, 3].map((order) => (
+            <div
+              key={order}
+              className="border-2 border-dashed border-level-4 rounded-xl overflow-hidden"
+            >
+              {/* Order Header Skeleton */}
+              <div className="bg-level-2/60 p-4 border-b-2 border-dashed border-level-4">
+                <div className="flex flex-wrap gap-4 justify-between items-center">
+                  <div className="space-y-1">
+                    <div className="h-5 w-20 bg-level-3/50 animate-pulse rounded-lg"></div>
+                    <div className="h-6 w-32 bg-level-3/50 animate-pulse rounded-lg"></div>
+                  </div>
+                  <div className="space-y-1 text-right">
+                    <div className="h-5 w-24 bg-level-3/50 animate-pulse rounded-lg"></div>
+                    <div className="h-6 w-32 bg-level-3/50 animate-pulse rounded-lg"></div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Order Items Skeleton */}
+              <div className="p-4 space-y-4">
+                {[1, 2].map((item) => (
+                  <div
+                    key={item}
+                    className="flex gap-4 p-4 border-2 border-dashed border-level-4 rounded-xl bg-level-2/30"
+                  >
+                    {/* Product Image Skeleton */}
+                    <div className="w-20 h-20 bg-level-3/50 animate-pulse rounded-lg"></div>
+
+                    {/* Product Details Skeleton */}
+                    <div className="flex-1">
+                      <div className="h-7 w-48 bg-level-3/50 animate-pulse rounded-lg mb-2"></div>
+                      <div className="h-5 w-32 bg-level-3/50 animate-pulse rounded-lg mb-2"></div>
+                      <div className="flex items-center gap-4 mt-2">
+                        <div className="h-6 w-24 bg-level-3/50 animate-pulse rounded-lg"></div>
+                        <div className="h-6 w-24 bg-level-3/50 animate-pulse rounded-lg"></div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                {/* Order Summary Skeleton */}
+                <div className="flex flex-wrap gap-6 justify-between items-start mt-4 pt-4 border-t-2 border-dashed border-level-4">
+                  {/* Shipping Address Skeleton */}
+                  <div className="space-y-2">
+                    <div className="h-6 w-36 bg-level-3/50 animate-pulse rounded-lg"></div>
+                    <div className="space-y-1">
+                      {[1, 2, 3, 4].map((line) => (
+                        <div
+                          key={line}
+                          className="h-5 w-48 bg-level-3/50 animate-pulse rounded-lg"
+                        ></div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Order Status Skeleton */}
+                  <div className="space-y-2">
+                    <div className="h-6 w-28 bg-level-3/50 animate-pulse rounded-lg"></div>
+                    <div className="space-y-2">
+                      <div className="h-6 w-32 bg-level-3/50 animate-pulse rounded-lg"></div>
+                      <div className="h-5 w-40 bg-level-3/50 animate-pulse rounded-lg"></div>
+                      <div className="h-10 w-48 bg-level-3/50 animate-pulse rounded-lg"></div>
+                    </div>
+                  </div>
+
+                  {/* Order Total Skeleton */}
+                  <div className="space-y-2">
+                    <div className="h-6 w-24 bg-level-3/50 animate-pulse rounded-lg"></div>
+                    <div className="space-y-1">
+                      <div className="flex justify-between gap-8">
+                        <div className="h-5 w-20 bg-level-3/50 animate-pulse rounded-lg"></div>
+                        <div className="h-5 w-24 bg-level-3/50 animate-pulse rounded-lg"></div>
+                      </div>
+                      <div className="flex justify-between gap-8">
+                        <div className="h-5 w-20 bg-level-3/50 animate-pulse rounded-lg"></div>
+                        <div className="h-5 w-24 bg-level-3/50 animate-pulse rounded-lg"></div>
+                      </div>
+                      <div className="flex justify-between gap-8">
+                        <div className="h-6 w-16 bg-level-3/50 animate-pulse rounded-lg"></div>
+                        <div className="h-6 w-28 bg-level-3/50 animate-pulse rounded-lg"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const Orders = () => {
+  const { orders, getOrders, loading } = ordersStore();
+  useEffect(() => {
+    getOrders();
+  }, []);
   const formatPrice = (price) => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
@@ -229,7 +163,7 @@ const Orders = () => {
       order.paymentStatus === "pending" || order.paymentStatus === "failed"
     );
   };
-
+  if (loading) return <OrdersSkeleton />;
   return (
     <div className="border-level-4 border-dashed border-b-2">
       <div className="container mx-auto min-h-[calc(100dvh-calc(var(--header-height)+var(--footer-height)+2px))] border-l-2 border-r-2 border-dashed border-level-4 py-8 px-8">
@@ -269,7 +203,7 @@ const Orders = () => {
                     >
                       {/* Product Image */}
                       <Link
-                        to={`/product/${item.product.slug}`}
+                        to={`/product/${item.product._id}`}
                         className="w-20 h-20 border-2 border-dashed border-level-4 rounded-lg p-2 bg-level-1"
                       >
                         <img
@@ -282,7 +216,7 @@ const Orders = () => {
                       {/* Product Details */}
                       <div className="flex-1">
                         <Link
-                          to={`/product/${item.product.slug}`}
+                          to={`/product/${item.product._id}`}
                           className="text-lg font-semibold text-level-5 hover:underline"
                         >
                           {item.product.name}

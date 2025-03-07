@@ -71,5 +71,19 @@ const cartStore = create((set, get) => ({
       console.log(error);
     }
   },
+  placeOrder: async (checkoutData) => {
+    try {
+      const res = await toast.promise(api.post("/orders", checkoutData), {
+        loading: "Placing order...",
+        success: "Order placed successfully!",
+        error: "Failed to place order.",
+      });
+      set({
+        cart: [],
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  },
 }));
 export default cartStore;
