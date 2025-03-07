@@ -2,12 +2,16 @@ import React, { useEffect, useRef, useState } from "react";
 import { ShoppingCart, User, LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
 import authStore from "../store/authStore";
+import cartStore from "../store/cartStore";
 
 const Header = () => {
   const headerRef = useRef(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
-
+  const { cart, getCart, loading } = cartStore();
+  useEffect(() => {
+    getCart();
+  }, []);
   useEffect(() => {
     const updateHeaderHeight = () => {
       if (headerRef.current) {
@@ -57,12 +61,15 @@ const Header = () => {
           <div>
             <ul className="flex items-center gap-6">
               <li>
-                <button className="p-2 hover:bg-gray-100 rounded-full transition-colors relative">
+                <Link
+                  to={"/cart"}
+                  className="p-2 block hover:bg-gray-100 rounded-full transition-colors relative"
+                >
                   <ShoppingCart className="w-6 h-6 text-level-4" />
                   <span className="absolute -top-1 -right-1 bg-level-5 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                    0
+                    {loading ? "..." : cart.items.length}
                   </span>
-                </button>
+                </Link>
               </li>
               <li>
                 <div className="relative" ref={dropdownRef}>

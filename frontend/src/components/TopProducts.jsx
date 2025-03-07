@@ -1,10 +1,13 @@
 import React, { useEffect } from "react";
 import { Star, ShoppingCart, MoveRight } from "lucide-react";
 import store from "../store/store";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import cartStore from "../store/cartStore";
 
 const TopProducts = () => {
+  const navigate = useNavigate();
   const { products, getProducts, productsLoading } = store();
+  const { addToCart } = cartStore();
   useEffect(() => {
     getProducts();
   }, []);
@@ -189,8 +192,10 @@ const TopProducts = () => {
         {/* Products Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {products.map((product, index) => (
-            <Link
-              to={`/product/${product._id}`}
+            <div
+              onClick={() => {
+                navigate(`/product/${product._id}`);
+              }}
               key={index}
               className="border-2 border-level-4 rounded-xl overflow-hidden group cursor-pointer hover:shadow-2xl hover:shadow-level-5/20 transition-all duration-300 hover:-translate-y-1"
             >
@@ -265,12 +270,18 @@ const TopProducts = () => {
                 </div>
 
                 {/* Add to Cart Button */}
-                <button className="hover:bg-level-5 border-2 border-level-5 border-dashed text-level-5 rounded-xl flex items-center justify-center gap-2 w-full p-3 cursor-pointer hover:text-white font-medium transition-colors">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    addToCart(product._id, 1);
+                  }}
+                  className="hover:bg-level-5 border-2 border-level-5 border-dashed text-level-5 rounded-xl flex items-center justify-center gap-2 w-full p-3 cursor-pointer hover:text-white font-medium transition-colors"
+                >
                   Add To Cart
                   <ShoppingCart className="w-5 h-5 transform  transition-transform" />
                 </button>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       </div>

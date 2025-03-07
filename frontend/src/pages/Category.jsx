@@ -37,6 +37,93 @@ import categoryStore from "../store/categoryStore";
 //   },
 // };
 
+const CategorySkeleton = () => {
+  return (
+    <div className="border-level-4 border-dashed border-b-2">
+      <div className="container mx-auto min-h-[calc(100dvh-calc(var(--header-height)+var(--footer-height)+2px))] border-l-2 border-r-2 border-dashed border-level-4">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* Filter Sidebar Skeleton */}
+          <div className="lg:col-span-1 border-r-2 border-dashed border-level-4 p-4">
+            {/* Filter Section Skeletons */}
+            {[1, 2, 3].map((item) => (
+              <div key={item} className="mb-4">
+                <div className="flex items-center justify-between w-full p-2">
+                  <div className="h-6 w-24 bg-level-3/50 animate-pulse rounded-lg"></div>
+                  <div className="h-5 w-5 bg-level-3/50 animate-pulse rounded-lg"></div>
+                </div>
+                <div className="mt-2 space-y-2 pl-2">
+                  {[1, 2, 3, 4].map((subItem) => (
+                    <div key={subItem} className="flex items-center gap-2">
+                      <div className="h-4 w-4 bg-level-3/50 animate-pulse rounded"></div>
+                      <div className="h-4 w-32 bg-level-3/50 animate-pulse rounded-lg"></div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Products Grid Skeleton */}
+          <div className="lg:col-span-3 p-4">
+            {/* Category Title Skeleton */}
+            <div className="h-8 w-48 bg-level-3/50 animate-pulse rounded-lg mb-4"></div>
+
+            {/* Products Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3, 4, 5, 6].map((item) => (
+                <div
+                  key={item}
+                  className="border-2 border-level-4 rounded-xl overflow-hidden"
+                >
+                  {/* Image Skeleton */}
+                  <div className="relative h-52 bg-level-3/50 animate-pulse p-4"></div>
+
+                  {/* Product Info Skeleton */}
+                  <div className="p-5 space-y-4">
+                    {/* Category & Brand */}
+                    <div className="flex justify-between items-center">
+                      <div className="h-6 w-16 bg-level-3/50 animate-pulse rounded-sm"></div>
+                      <div className="h-6 w-16 bg-level-3/50 animate-pulse rounded-sm"></div>
+                    </div>
+
+                    {/* Title */}
+                    <div className="h-7 w-3/4 bg-level-3/50 animate-pulse rounded-lg"></div>
+
+                    {/* Rating */}
+                    <div className="flex items-center gap-1">
+                      <div className="flex gap-0.5">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <div
+                            key={star}
+                            className="h-4 w-4 bg-level-3/50 animate-pulse rounded"
+                          ></div>
+                        ))}
+                      </div>
+                      <div className="h-4 w-12 bg-level-3/50 animate-pulse rounded ml-2"></div>
+                    </div>
+
+                    {/* Price & Stock */}
+                    <div className="flex justify-between items-center pt-2">
+                      <div className="space-y-1">
+                        <div className="h-8 w-24 bg-level-3/50 animate-pulse rounded-lg"></div>
+                        <div className="h-4 w-20 bg-level-3/50 animate-pulse rounded-lg"></div>
+                      </div>
+                      <div className="h-6 w-20 bg-level-3/50 animate-pulse rounded-full"></div>
+                    </div>
+
+                    {/* Button */}
+                    <div className="h-12 w-full bg-level-3/50 animate-pulse rounded-xl"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Category = () => {
   const { id } = useParams();
   const { getCategory, data, loading } = categoryStore();
@@ -84,7 +171,7 @@ const Category = () => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
-  if (loading) return <div>loading</div>;
+  if (loading) return <CategorySkeleton />;
   return (
     <div className="border-level-4 border-dashed border-b-2">
       <div className="container mx-auto min-h-[calc(100dvh-calc(var(--header-height)+var(--footer-height)+2px))] border-l-2 border-r-2 border-dashed border-level-4">

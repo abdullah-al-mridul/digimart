@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import useApi from "../hooks/useApi";
+import toast from "react-hot-toast";
 const api = useApi();
 const cartStore = create((set) => ({
   cart: [],
@@ -19,6 +20,23 @@ const cartStore = create((set) => ({
       set({
         loading: false,
       });
+    }
+  },
+  addToCart: async (productId, quantity) => {
+    try {
+      const res = await toast.promise(
+        api.post("/cart", { productId, quantity }),
+        {
+          loading: "Adding product...",
+          success: "Product added successfully!",
+          error: "Failed to add product.",
+        }
+      );
+      set({
+        cart: [...get().cart, res.product],
+      });
+    } catch (error) {
+      console.log(error);
     }
   },
 }));
