@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, memo } from "react";
 import {
   Package,
   Grid,
@@ -12,8 +12,489 @@ import {
 } from "lucide-react";
 import adminStore from "../store/adminStore";
 
+// Move UpdateForm outside and memoize it
+const UpdateForm = memo(
+  ({
+    showUpdateForm,
+    setShowUpdateForm,
+    setSelectedItem,
+    selectedItem,
+    updateCategoryData,
+    setUpdateCategoryData,
+    updateFileInputRef,
+    updateCatagory,
+  }) => {
+    if (!showUpdateForm) return null;
+
+    const handleUpdateSubmit = (e) => {
+      e.preventDefault();
+      updateCatagory(updateCategoryData, selectedItem._id);
+      setShowUpdateForm(false);
+      setSelectedItem(null);
+      setUpdateCategoryData({
+        name: "",
+        description: "",
+        image: null,
+      });
+    };
+
+    const handleUpdateChange = (e) => {
+      const { name, value } = e.target;
+      setUpdateCategoryData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    };
+
+    return (
+      <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-xl w-full max-w-4xl p-6 max-h-[90vh] overflow-y-auto">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-2xl font-semibold text-level-5">
+              Update Category
+            </h3>
+            <button
+              onClick={() => {
+                setShowUpdateForm(false);
+                setSelectedItem(null);
+                setUpdateCategoryData({
+                  name: "",
+                  description: "",
+                  image: null,
+                });
+              }}
+              className="p-2 hover:bg-level-2/60 rounded-lg transition-colors"
+            >
+              <X className="w-5 h-5 text-level-5" />
+            </button>
+          </div>
+
+          {/* Form */}
+          <form
+            onSubmit={handleUpdateSubmit}
+            className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          >
+            <div className="space-y-6">
+              {/* Name Input */}
+              <div>
+                <label className="block text-sm font-medium text-level-5 mb-2">
+                  Category Name
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={updateCategoryData.name}
+                  onChange={handleUpdateChange}
+                  className="w-full px-4 py-2 bg-transparent border-2 border-dashed border-level-4 rounded-xl text-level-5 placeholder-level-5/50 focus:outline-none focus:border-level-5 transition-colors"
+                  required
+                />
+              </div>
+
+              {/* Description */}
+              <div>
+                <label className="block text-sm font-medium text-level-5 mb-2">
+                  Description
+                </label>
+                <textarea
+                  name="description"
+                  value={updateCategoryData.description}
+                  onChange={handleUpdateChange}
+                  rows={3}
+                  className="w-full px-4 py-2 bg-transparent border-2 border-dashed border-level-4 rounded-xl text-level-5 placeholder-level-5/50 focus:outline-none focus:border-level-5 transition-colors resize-none"
+                  required
+                />
+              </div>
+
+              {/* Update Button */}
+              <button
+                type="submit"
+                className="w-full py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors"
+              >
+                Update Category
+              </button>
+            </div>
+
+            {/* Image Upload */}
+            <div>
+              <label className="block text-sm font-medium text-level-5 mb-2">
+                Category Image
+              </label>
+              <div
+                onClick={() => updateFileInputRef.current?.click()}
+                className="border-2 border-dashed border-level-4 rounded-xl p-8 cursor-pointer hover:border-level-5 transition-colors h-full flex items-center justify-center"
+              >
+                <div className="flex flex-col items-center gap-2">
+                  {updateCategoryData.image ? (
+                    <div className="relative">
+                      <img
+                        src={
+                          typeof updateCategoryData.image === "string"
+                            ? updateCategoryData.image
+                            : URL.createObjectURL(updateCategoryData.image)
+                        }
+                        alt="Preview"
+                        className="w-48 h-48 object-cover rounded-xl"
+                      />
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setUpdateCategoryData((prev) => ({
+                            ...prev,
+                            image: null,
+                          }));
+                        }}
+                        className="absolute -top-2 -right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <Upload className="w-12 h-12 text-level-5/50" />
+                      <p className="text-level-5/70 text-sm text-center">
+                        Click to upload or drag and drop
+                        <br />
+                        SVG, PNG, JPG or GIF (max. 2MB)
+                      </p>
+                    </>
+                  )}
+                </div>
+                <input
+                  type="file"
+                  ref={updateFileInputRef}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setUpdateCategoryData((prev) => ({
+                        ...prev,
+                        image: file,
+                      }));
+                    }
+                  }}
+                  accept="image/*"
+                  className="hidden"
+                />
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  }
+);
+
+// Create a new UpdateProductForm component
+const UpdateProductForm = memo(
+  ({
+    showUpdateForm,
+    setShowUpdateForm,
+    setSelectedItem,
+    selectedItem,
+    updateProductData,
+    setUpdateProductData,
+    updateFileInputRef,
+    updateProduct,
+    categories,
+  }) => {
+    if (!showUpdateForm) return null;
+
+    const handleUpdateSubmit = (e) => {
+      e.preventDefault();
+      updateProduct(updateProductData, selectedItem._id);
+      setShowUpdateForm(false);
+      setSelectedItem(null);
+      setUpdateProductData({
+        name: "",
+        description: "",
+        images: [],
+        price: "",
+        category: "",
+        brand: "",
+        stock: "",
+        discount: "",
+        rating: 0,
+        isFeatured: false,
+      });
+    };
+
+    const handleUpdateChange = (e) => {
+      const { name, value } = e.target;
+      setUpdateProductData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    };
+
+    return (
+      <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-xl w-full max-w-4xl p-6 max-h-[90vh] overflow-y-auto">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-2xl font-semibold text-level-5">
+              Update Product
+            </h3>
+            <button
+              onClick={() => {
+                setShowUpdateForm(false);
+                setSelectedItem(null);
+                setUpdateProductData({
+                  name: "",
+                  description: "",
+                  images: [],
+                  price: "",
+                  category: "",
+                  brand: "",
+                  stock: "",
+                  discount: "",
+                  rating: 0,
+                  isFeatured: false,
+                });
+              }}
+              className="p-2 hover:bg-level-2/60 rounded-lg transition-colors"
+            >
+              <X className="w-5 h-5 text-level-5" />
+            </button>
+          </div>
+
+          {/* Form */}
+          <form
+            onSubmit={handleUpdateSubmit}
+            className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          >
+            <div className="space-y-6">
+              {/* Name Input */}
+              <div>
+                <label className="block text-sm font-medium text-level-5 mb-2">
+                  Product Name
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={updateProductData.name}
+                  onChange={handleUpdateChange}
+                  className="w-full px-4 py-2 bg-transparent border-2 border-dashed border-level-4 rounded-xl text-level-5 placeholder-level-5/50 focus:outline-none focus:border-level-5 transition-colors"
+                  required
+                />
+              </div>
+
+              {/* Description */}
+              <div>
+                <label className="block text-sm font-medium text-level-5 mb-2">
+                  Description
+                </label>
+                <textarea
+                  name="description"
+                  value={updateProductData.description}
+                  onChange={handleUpdateChange}
+                  rows={3}
+                  className="w-full px-4 py-2 bg-transparent border-2 border-dashed border-level-4 rounded-xl text-level-5 placeholder-level-5/50 focus:outline-none focus:border-level-5 transition-colors resize-none"
+                  required
+                />
+              </div>
+
+              {/* Price & Stock */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-level-5 mb-2">
+                    Price
+                  </label>
+                  <input
+                    type="number"
+                    name="price"
+                    value={updateProductData.price}
+                    onChange={handleUpdateChange}
+                    className="w-full px-4 py-2 bg-transparent border-2 border-dashed border-level-4 rounded-xl text-level-5"
+                    required
+                    min="0"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-level-5 mb-2">
+                    Stock
+                  </label>
+                  <input
+                    type="number"
+                    name="stock"
+                    value={updateProductData.stock}
+                    onChange={handleUpdateChange}
+                    className="w-full px-4 py-2 bg-transparent border-2 border-dashed border-level-4 rounded-xl text-level-5"
+                    required
+                    min="0"
+                  />
+                </div>
+              </div>
+
+              {/* Category & Discount */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-level-5 mb-2">
+                    Category
+                  </label>
+                  <select
+                    name="category"
+                    value={updateProductData.category}
+                    onChange={handleUpdateChange}
+                    className="w-full px-4 py-2 bg-transparent border-2 border-dashed border-level-4 rounded-xl text-level-5"
+                    required
+                  >
+                    <option value="">Select category</option>
+                    {categories.map((cat) => (
+                      <option key={cat._id} value={cat._id}>
+                        {cat.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-level-5 mb-2">
+                    Discount (%)
+                  </label>
+                  <input
+                    type="number"
+                    name="discount"
+                    value={updateProductData.discount}
+                    onChange={handleUpdateChange}
+                    className="w-full px-4 py-2 bg-transparent border-2 border-dashed border-level-4 rounded-xl text-level-5"
+                    min="0"
+                    max="100"
+                  />
+                </div>
+              </div>
+
+              {/* Brand */}
+              <div>
+                <label className="block text-sm font-medium text-level-5 mb-2">
+                  Brand
+                </label>
+                <input
+                  type="text"
+                  name="brand"
+                  value={updateProductData.brand}
+                  onChange={handleUpdateChange}
+                  className="w-full px-4 py-2 bg-transparent border-2 border-dashed border-level-4 rounded-xl text-level-5"
+                  required
+                />
+              </div>
+
+              {/* Rating */}
+              <div>
+                <label className="block text-sm font-medium text-level-5 mb-2">
+                  Rating
+                </label>
+                <input
+                  type="number"
+                  name="rating"
+                  value={updateProductData.rating}
+                  onChange={handleUpdateChange}
+                  min="0"
+                  max="5"
+                  step="0.1"
+                  className="w-full px-4 py-2 bg-transparent border-2 border-dashed border-level-4 rounded-xl text-level-5 placeholder-level-5/50 focus:outline-none focus:border-level-5 transition-colors"
+                  required
+                />
+              </div>
+
+              {/* Update Button */}
+              <button
+                type="submit"
+                className="w-full py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors"
+              >
+                Update Product
+              </button>
+            </div>
+
+            {/* Images Upload */}
+            <div>
+              <label className="block text-sm font-medium text-level-5 mb-2">
+                Product Images (Max 5)
+              </label>
+              <div
+                onClick={() => updateFileInputRef.current?.click()}
+                className="border-2 border-dashed border-level-4 rounded-xl p-8 cursor-pointer hover:border-level-5 transition-colors h-full flex items-center justify-center"
+              >
+                <div className="w-full">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+                    {updateProductData.images.map((image, index) => (
+                      <div key={index} className="relative">
+                        <img
+                          src={
+                            typeof image === "string"
+                              ? image
+                              : URL.createObjectURL(image)
+                          }
+                          alt={`Preview ${index + 1}`}
+                          className="w-full h-32 object-cover rounded-xl"
+                        />
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setUpdateProductData((prev) => ({
+                              ...prev,
+                              images: prev.images.filter((_, i) => i !== index),
+                            }));
+                          }}
+                          className="absolute -top-2 -right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                  {updateProductData.images.length < 5 && (
+                    <div className="flex flex-col items-center gap-2">
+                      <Upload className="w-12 h-12 text-level-5/50" />
+                      <p className="text-level-5/70 text-sm text-center">
+                        Click to upload or drag and drop
+                        <br />
+                        SVG, PNG, JPG or GIF (max. 2MB)
+                        <br />
+                        {updateProductData.images.length}/5 images
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <input
+                type="file"
+                ref={updateFileInputRef}
+                onChange={(e) => {
+                  const files = Array.from(e.target.files || []);
+                  if (files.length + updateProductData.images.length > 5) {
+                    alert("You can only upload up to 5 images");
+                    return;
+                  }
+                  setUpdateProductData((prev) => ({
+                    ...prev,
+                    images: [...prev.images, ...files].slice(0, 5),
+                  }));
+                }}
+                accept="image/*"
+                multiple
+                className="hidden"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  }
+);
+
 const Controll = () => {
-  const { categories, loadingControl, getControl, products } = adminStore();
+  const {
+    categories,
+    loadingControl,
+    getControl,
+    products,
+    addCatagory,
+    deleteCatagory,
+    updateCatagory,
+    addProduct,
+    updateProduct,
+  } = adminStore();
   const [activeTab, setActiveTab] = useState("categories"); // or "products"
   const [searchTerm, setSearchTerm] = useState("");
   const [showAddForm, setShowAddForm] = useState(false);
@@ -27,36 +508,47 @@ const Controll = () => {
   useEffect(() => {
     console.log(products);
   }, [products]);
-
-  // Add Form Data
-  const [addFormData, setAddFormData] = useState({
+  const [newCategoryData, setNewCategoryData] = useState({
     name: "",
     description: "",
     image: null,
+  });
+  const [updateCategoryData, setUpdateCategoryData] = useState({
+    name: "",
+    description: "",
+    image: null,
+  });
+  // Product Create State
+  const [newProductData, setNewProductData] = useState({
+    name: "",
+    description: "",
     images: [],
     price: "",
     category: "",
     brand: "",
     stock: "",
     discount: "",
+    rating: 0,
+    isFeatured: false,
   });
 
-  // Update Form Data
-  const [updateFormData, setUpdateFormData] = useState({
+  // Product Update State
+  const [updateProductData, setUpdateProductData] = useState({
     name: "",
     description: "",
-    image: null,
     images: [],
     price: "",
     category: "",
     brand: "",
     stock: "",
     discount: "",
+    rating: 0,
+    isFeatured: false,
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setAddFormData((prev) => ({
+    setNewProductData((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -67,17 +559,17 @@ const Controll = () => {
 
     if (activeTab === "categories") {
       // Single image for category
-      setAddFormData((prev) => ({
+      setNewCategoryData((prev) => ({
         ...prev,
         image: files[0],
       }));
     } else {
       // Multiple images for product (max 5)
-      if (files.length + addFormData.images.length > 5) {
+      if (files.length + newProductData.images.length > 5) {
         alert("You can only upload up to 5 images");
         return;
       }
-      setAddFormData((prev) => ({
+      setNewProductData((prev) => ({
         ...prev,
         images: [...prev.images, ...files].slice(0, 5),
       }));
@@ -85,7 +577,7 @@ const Controll = () => {
   };
 
   const removeImage = (index) => {
-    setAddFormData((prev) => ({
+    setNewProductData((prev) => ({
       ...prev,
       images: prev.images.filter((_, i) => i !== index),
     }));
@@ -97,69 +589,53 @@ const Controll = () => {
     setShowAddForm(false);
 
     if (activeTab === "categories") {
-      setUpdateFormData({
+      setUpdateCategoryData({
         name: item.name,
         description: item.description,
         image: item.image,
       });
     } else {
-      setUpdateFormData({
+      setUpdateProductData({
         name: item.name,
         description: item.description,
         images: item.images || [],
         price: item.price,
-        category: item.category,
+        category: item.category._id,
         brand: item.brand,
         stock: item.stock,
         discount: item.discount || "",
+        rating: item.rating || 0,
       });
     }
   };
 
-  const handleUpdate = (e) => {
-    e.preventDefault();
-    // Update API call here
-    console.log("Updating:", selectedItem.id, updateFormData);
-    setShowUpdateForm(false);
-    setSelectedItem(null);
-    setUpdateFormData({
-      name: "",
-      description: "",
-      image: null,
-      images: [],
-      price: "",
-      category: "",
-      brand: "",
-      stock: "",
-      discount: "",
-    });
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add your API call here
-    if (selectedItem) {
-      // Update API call
-      console.log("Updating:", selectedItem.id, updateFormData);
+    if (activeTab === "categories") {
+      addCatagory(newCategoryData);
     } else {
-      // Create API call
-      console.log("Creating:", addFormData);
+      addProduct(newProductData);
     }
-
     setShowAddForm(false);
-    setShowUpdateForm(false);
-    setSelectedItem(null);
-    setAddFormData({
-      name: "",
-      description: "",
-      image: null,
-      images: [],
-      price: "",
-      category: "",
-      brand: "",
-      stock: "",
-      discount: "",
-    });
+    // Reset form data
+    if (activeTab === "categories") {
+      setNewCategoryData({
+        name: "",
+        description: "",
+        image: null,
+      });
+    } else {
+      setNewProductData({
+        name: "",
+        description: "",
+        images: [],
+        price: "",
+        category: "",
+        brand: "",
+        stock: "",
+        discount: "",
+      });
+    }
   };
 
   // Update the form header and button text based on edit mode
@@ -178,285 +654,15 @@ const Controll = () => {
     return `Add ${activeTab === "categories" ? "Category" : "Product"}`;
   };
 
-  // Update Form Component
-  const UpdateForm = () => {
-    if (!showUpdateForm) return null;
-
-    return (
-      <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-xl w-full max-w-4xl p-6 max-h-[90vh] overflow-y-auto">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-2xl font-semibold text-level-5">
-              Update {activeTab === "categories" ? "Category" : "Product"}
-            </h3>
-            <button
-              onClick={() => {
-                setShowUpdateForm(false);
-                setSelectedItem(null);
-              }}
-              className="p-2 hover:bg-level-2/60 rounded-lg transition-colors"
-            >
-              <X className="w-5 h-5 text-level-5" />
-            </button>
-          </div>
-
-          {/* Form */}
-          <form
-            onSubmit={handleUpdate}
-            className="grid grid-cols-1 md:grid-cols-2 gap-6"
-          >
-            <div className="space-y-6">
-              {/* Name Input */}
-              <div>
-                <label className="block text-sm font-medium text-level-5 mb-2">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  value={updateFormData.name}
-                  onChange={(e) =>
-                    setUpdateFormData((prev) => ({
-                      ...prev,
-                      name: e.target.value,
-                    }))
-                  }
-                  className="w-full px-4 py-2 bg-transparent border-2 border-dashed border-level-4 rounded-xl text-level-5 placeholder-level-5/50 focus:outline-none focus:border-level-5 transition-colors"
-                />
-              </div>
-
-              {/* Description */}
-              <div>
-                <label className="block text-sm font-medium text-level-5 mb-2">
-                  Description
-                </label>
-                <textarea
-                  value={updateFormData.description}
-                  onChange={(e) =>
-                    setUpdateFormData((prev) => ({
-                      ...prev,
-                      description: e.target.value,
-                    }))
-                  }
-                  rows={3}
-                  className="w-full px-4 py-2 bg-transparent border-2 border-dashed border-level-4 rounded-xl text-level-5 placeholder-level-5/50 focus:outline-none focus:border-level-5 transition-colors resize-none"
-                />
-              </div>
-
-              {/* Product-specific fields */}
-              {activeTab === "products" && (
-                <>
-                  {/* Price & Stock */}
-                  <div className="grid grid-cols-2 gap-4">
-                    {/* Price */}
-                    <div>
-                      <label className="block text-sm font-medium text-level-5 mb-2">
-                        Price
-                      </label>
-                      <input
-                        type="number"
-                        value={updateFormData.price}
-                        onChange={(e) =>
-                          setUpdateFormData((prev) => ({
-                            ...prev,
-                            price: e.target.value,
-                          }))
-                        }
-                        className="w-full px-4 py-2 bg-transparent border-2 border-dashed border-level-4 rounded-xl text-level-5"
-                      />
-                    </div>
-                    {/* Stock */}
-                    <div>
-                      <label className="block text-sm font-medium text-level-5 mb-2">
-                        Stock
-                      </label>
-                      <input
-                        type="number"
-                        value={updateFormData.stock}
-                        onChange={(e) =>
-                          setUpdateFormData((prev) => ({
-                            ...prev,
-                            stock: e.target.value,
-                          }))
-                        }
-                        className="w-full px-4 py-2 bg-transparent border-2 border-dashed border-level-4 rounded-xl text-level-5"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Category & Discount */}
-                  <div className="grid grid-cols-2 gap-4">
-                    {/* Category */}
-                    <div>
-                      <label className="block text-sm font-medium text-level-5 mb-2">
-                        Category
-                      </label>
-                      <select
-                        value={updateFormData.category}
-                        onChange={(e) =>
-                          setUpdateFormData((prev) => ({
-                            ...prev,
-                            category: e.target.value,
-                          }))
-                        }
-                        className="w-full px-4 py-2 bg-transparent border-2 border-dashed border-level-4 rounded-xl text-level-5"
-                      >
-                        <option value="">Select category</option>
-                        {categories.map((cat) => (
-                          <option key={cat.id} value={cat.id}>
-                            {cat.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    {/* Discount */}
-                    <div>
-                      <label className="block text-sm font-medium text-level-5 mb-2">
-                        Discount (%)
-                      </label>
-                      <input
-                        type="number"
-                        value={updateFormData.discount}
-                        onChange={(e) =>
-                          setUpdateFormData((prev) => ({
-                            ...prev,
-                            discount: e.target.value,
-                          }))
-                        }
-                        className="w-full px-4 py-2 bg-transparent border-2 border-dashed border-level-4 rounded-xl text-level-5"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Brand */}
-                  <div>
-                    <label className="block text-sm font-medium text-level-5 mb-2">
-                      Brand
-                    </label>
-                    <input
-                      type="text"
-                      value={updateFormData.brand}
-                      onChange={(e) =>
-                        setUpdateFormData((prev) => ({
-                          ...prev,
-                          brand: e.target.value,
-                        }))
-                      }
-                      className="w-full px-4 py-2 bg-transparent border-2 border-dashed border-level-4 rounded-xl text-level-5"
-                    />
-                  </div>
-                </>
-              )}
-
-              {/* Update Button */}
-              <button
-                type="submit"
-                className="w-full py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors"
-              >
-                Update {activeTab === "categories" ? "Category" : "Product"}
-              </button>
-            </div>
-
-            {/* Image Upload Section */}
-            <div>
-              <label className="block text-sm font-medium text-level-5 mb-2">
-                {activeTab === "categories"
-                  ? "Category Image"
-                  : "Product Images (Max 5)"}
-              </label>
-              <div
-                onClick={() => addFileInputRef.current?.click()}
-                className="border-2 border-dashed border-level-4 rounded-xl p-8 cursor-pointer hover:border-level-5 transition-colors h-full flex items-center justify-center"
-              >
-                {activeTab === "categories" ? (
-                  // Category single image upload
-                  <div className="flex flex-col items-center gap-2">
-                    {addFormData.image ? (
-                      <div className="relative">
-                        <img
-                          src={URL.createObjectURL(addFormData.image)}
-                          alt="Preview"
-                          className="w-48 h-48 object-cover rounded-xl"
-                        />
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setAddFormData((prev) => ({
-                              ...prev,
-                              image: null,
-                            }));
-                          }}
-                          className="absolute -top-2 -right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
-                    ) : (
-                      <>
-                        <Upload className="w-12 h-12 text-level-5/50" />
-                        <p className="text-level-5/70 text-sm text-center">
-                          Click to upload or drag and drop
-                          <br />
-                          SVG, PNG, JPG or GIF (max. 2MB)
-                        </p>
-                      </>
-                    )}
-                  </div>
-                ) : (
-                  // Product multiple images upload
-                  <div className="w-full">
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
-                      {addFormData.images.map((image, index) => (
-                        <div key={index} className="relative">
-                          <img
-                            src={URL.createObjectURL(image)}
-                            alt={`Preview ${index + 1}`}
-                            className="w-full h-32 object-cover rounded-xl"
-                          />
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              removeImage(index);
-                            }}
-                            className="absolute -top-2 -right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
-                          >
-                            <X className="w-4 h-4" />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                    {addFormData.images.length < 5 && (
-                      <div className="flex flex-col items-center gap-2">
-                        <Upload className="w-12 h-12 text-level-5/50" />
-                        <p className="text-level-5/70 text-sm text-center">
-                          Click to upload or drag and drop
-                          <br />
-                          SVG, PNG, JPG or GIF (max. 2MB)
-                          <br />
-                          {addFormData.images.length}/5 images
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                )}
-                <input
-                  type="file"
-                  ref={addFileInputRef}
-                  onChange={handleImageChange}
-                  accept="image/*"
-                  multiple={activeTab === "products"}
-                  className="hidden"
-                />
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-    );
+  // Add this handler for new product form
+  const handleNewProductChange = (e) => {
+    const { name, value } = e.target;
+    setNewProductData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
-  //   return null;
+
   if (loadingControl) return <div>loading</div>;
   return (
     <div className="border-level-4 border-dashed border-b-2">
@@ -505,8 +711,22 @@ const Controll = () => {
                     type="text"
                     id="name"
                     name="name"
-                    value={addFormData.name}
-                    onChange={handleChange}
+                    value={
+                      activeTab === "categories"
+                        ? newCategoryData.name
+                        : newProductData.name
+                    }
+                    onChange={(e) => {
+                      activeTab === "categories"
+                        ? setNewCategoryData({
+                            ...newCategoryData,
+                            name: e.target.value,
+                          })
+                        : setNewProductData((prev) => ({
+                            ...prev,
+                            name: e.target.value,
+                          }));
+                    }}
                     required
                     className="w-full px-4 py-2 bg-transparent border-2 border-dashed border-level-4 rounded-xl text-level-5 placeholder-level-5/50 focus:outline-none focus:border-level-5 transition-colors"
                     placeholder={`Enter ${
@@ -526,8 +746,22 @@ const Controll = () => {
                   <textarea
                     id="description"
                     name="description"
-                    value={addFormData.description}
-                    onChange={handleChange}
+                    value={
+                      activeTab === "categories"
+                        ? newCategoryData.description
+                        : newProductData.description
+                    }
+                    onChange={(e) => {
+                      activeTab === "categories"
+                        ? setNewCategoryData({
+                            ...newCategoryData,
+                            description: e.target.value,
+                          })
+                        : setNewProductData((prev) => ({
+                            ...prev,
+                            description: e.target.value,
+                          }));
+                    }}
                     required
                     rows={3}
                     className="w-full px-4 py-2 bg-transparent border-2 border-dashed border-level-4 rounded-xl text-level-5 placeholder-level-5/50 focus:outline-none focus:border-level-5 transition-colors resize-none"
@@ -552,8 +786,8 @@ const Controll = () => {
                           type="number"
                           id="price"
                           name="price"
-                          value={addFormData.price}
-                          onChange={handleChange}
+                          value={newProductData.price}
+                          onChange={handleNewProductChange}
                           required
                           min="0"
                           className="w-full px-4 py-2 bg-transparent border-2 border-dashed border-level-4 rounded-xl text-level-5 placeholder-level-5/50 focus:outline-none focus:border-level-5 transition-colors"
@@ -571,8 +805,8 @@ const Controll = () => {
                           type="number"
                           id="stock"
                           name="stock"
-                          value={addFormData.stock}
-                          onChange={handleChange}
+                          value={newProductData.stock}
+                          onChange={handleNewProductChange}
                           required
                           min="0"
                           className="w-full px-4 py-2 bg-transparent border-2 border-dashed border-level-4 rounded-xl text-level-5 placeholder-level-5/50 focus:outline-none focus:border-level-5 transition-colors"
@@ -592,14 +826,14 @@ const Controll = () => {
                         <select
                           id="category"
                           name="category"
-                          value={addFormData.category}
-                          onChange={handleChange}
+                          value={newProductData.category}
+                          onChange={handleNewProductChange}
                           required
                           className="w-full px-4 py-2 bg-transparent border-2 border-dashed border-level-4 rounded-xl text-level-5 focus:outline-none focus:border-level-5 transition-colors"
                         >
                           <option value="">Select category</option>
                           {categories.map((cat) => (
-                            <option key={cat._id} value={cat.id}>
+                            <option key={cat._id} value={cat._id}>
                               {cat.name}
                             </option>
                           ))}
@@ -616,8 +850,8 @@ const Controll = () => {
                           type="number"
                           id="discount"
                           name="discount"
-                          value={addFormData.discount}
-                          onChange={handleChange}
+                          value={newProductData.discount}
+                          onChange={handleNewProductChange}
                           min="0"
                           max="100"
                           className="w-full px-4 py-2 bg-transparent border-2 border-dashed border-level-4 rounded-xl text-level-5 placeholder-level-5/50 focus:outline-none focus:border-level-5 transition-colors"
@@ -637,11 +871,30 @@ const Controll = () => {
                         type="text"
                         id="brand"
                         name="brand"
-                        value={addFormData.brand}
-                        onChange={handleChange}
+                        value={newProductData.brand}
+                        onChange={handleNewProductChange}
                         required
                         className="w-full px-4 py-2 bg-transparent border-2 border-dashed border-level-4 rounded-xl text-level-5 placeholder-level-5/50 focus:outline-none focus:border-level-5 transition-colors"
                         placeholder="Enter brand name"
+                      />
+                    </div>
+
+                    {/* Rating */}
+                    <div>
+                      <label className="block text-sm font-medium text-level-5 mb-2">
+                        Rating
+                      </label>
+                      <input
+                        type="number"
+                        id="rating"
+                        name="rating"
+                        value={newProductData.rating}
+                        onChange={handleNewProductChange}
+                        min="0"
+                        max="5"
+                        step="0.1"
+                        className="w-full px-4 py-2 bg-transparent border-2 border-dashed border-level-4 rounded-xl text-level-5 placeholder-level-5/50 focus:outline-none focus:border-level-5 transition-colors"
+                        placeholder="Enter rating (0-5)"
                       />
                     </div>
                   </>
@@ -669,10 +922,10 @@ const Controll = () => {
                   {activeTab === "categories" ? (
                     // Category single image upload
                     <div className="flex flex-col items-center gap-2">
-                      {addFormData.image ? (
+                      {newCategoryData.image ? (
                         <div className="relative">
                           <img
-                            src={URL.createObjectURL(addFormData.image)}
+                            src={URL.createObjectURL(newCategoryData.image)}
                             alt="Preview"
                             className="w-48 h-48 object-cover rounded-xl"
                           />
@@ -680,7 +933,7 @@ const Controll = () => {
                             type="button"
                             onClick={(e) => {
                               e.stopPropagation();
-                              setAddFormData((prev) => ({
+                              setNewCategoryData((prev) => ({
                                 ...prev,
                                 image: null,
                               }));
@@ -705,7 +958,7 @@ const Controll = () => {
                     // Product multiple images upload
                     <div className="w-full">
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
-                        {addFormData.images.map((image, index) => (
+                        {newProductData.images.map((image, index) => (
                           <div key={index} className="relative">
                             <img
                               src={URL.createObjectURL(image)}
@@ -725,7 +978,7 @@ const Controll = () => {
                           </div>
                         ))}
                       </div>
-                      {addFormData.images.length < 5 && (
+                      {newProductData.images.length < 5 && (
                         <div className="flex flex-col items-center gap-2">
                           <Upload className="w-12 h-12 text-level-5/50" />
                           <p className="text-level-5/70 text-sm text-center">
@@ -733,7 +986,7 @@ const Controll = () => {
                             <br />
                             SVG, PNG, JPG or GIF (max. 2MB)
                             <br />
-                            {addFormData.images.length}/5 images
+                            {newProductData.images.length}/5 images
                           </p>
                         </div>
                       )}
@@ -753,8 +1006,31 @@ const Controll = () => {
           </div>
         )}
 
-        {/* Update Form Modal */}
-        <UpdateForm />
+        {/* Update Forms */}
+        {activeTab === "categories" ? (
+          <UpdateForm
+            showUpdateForm={showUpdateForm}
+            setShowUpdateForm={setShowUpdateForm}
+            setSelectedItem={setSelectedItem}
+            selectedItem={selectedItem}
+            updateCategoryData={updateCategoryData}
+            setUpdateCategoryData={setUpdateCategoryData}
+            updateFileInputRef={updateFileInputRef}
+            updateCatagory={updateCatagory}
+          />
+        ) : (
+          <UpdateProductForm
+            showUpdateForm={showUpdateForm}
+            setShowUpdateForm={setShowUpdateForm}
+            setSelectedItem={setSelectedItem}
+            selectedItem={selectedItem}
+            updateProductData={updateProductData}
+            setUpdateProductData={setUpdateProductData}
+            updateFileInputRef={updateFileInputRef}
+            updateProduct={updateProduct}
+            categories={categories}
+          />
+        )}
 
         {/* Tabs */}
         <div className="flex gap-4 mb-6">
@@ -824,7 +1100,12 @@ const Controll = () => {
                     >
                       <Pencil className="w-5 h-5" />
                     </button>
-                    <button className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors">
+                    <button
+                      onClick={() => {
+                        deleteCatagory(category._id);
+                      }}
+                      className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
+                    >
                       <Trash className="w-5 h-5" />
                     </button>
                   </div>

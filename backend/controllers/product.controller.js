@@ -111,6 +111,7 @@ export const createProduct = async (req, res) => {
       stock,
       discount,
       isFeatured,
+      rating,
     } = req.body;
 
     // Validate required fields
@@ -156,6 +157,7 @@ export const createProduct = async (req, res) => {
       images,
       discount: discount || 0,
       isFeatured: isFeatured || false,
+      rating: rating || 0,
     });
 
     res.status(201).json({

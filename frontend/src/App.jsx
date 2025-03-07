@@ -20,7 +20,7 @@ import SecureRoute from "./components/SecureRoute";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentFail from "./pages/PaymentFail";
 import Controll from "./pages/Controll";
-
+import { Toaster } from "react-hot-toast";
 const App = () => {
   const { user, getUser, loading } = authStore();
   console.log(user);
@@ -98,6 +98,17 @@ const App = () => {
           />
         </Routes>
         <Footer />
+        <div>
+          <Toaster
+            toastOptions={{
+              className: "",
+              // style: {
+              //   background: "red",
+              // },
+            }}
+            position="bottom-left"
+          />
+        </div>
       </div>
     </Router>
   );
