@@ -160,6 +160,10 @@ const userSchema = new mongoose.Schema(
         location: String,
       },
     ],
+    verificationCode: {
+      type: String,
+      default: null,
+    },
   },
   {
     timestamps: true, // Adds createdAt and updatedAt fields

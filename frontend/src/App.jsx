@@ -21,6 +21,7 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentFail from "./pages/PaymentFail";
 import Controll from "./pages/Controll";
 import { Toaster } from "react-hot-toast";
+import EmailVerification from "./pages/EmailVerification";
 const App = () => {
   const { user, getUser, loading } = authStore();
   console.log(user);
@@ -93,6 +94,14 @@ const App = () => {
             element={
               <SecureRoute>
                 <PaymentFail />
+              </SecureRoute>
+            }
+          />
+          <Route
+            path="/verify-email"
+            element={
+              <SecureRoute>
+                <EmailVerification />
               </SecureRoute>
             }
           />

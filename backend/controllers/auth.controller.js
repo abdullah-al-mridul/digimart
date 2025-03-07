@@ -1,5 +1,6 @@
 import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
+import sendCodeToEmail from "../utilities/emailverification.js";
 
 export const register = async (req, res) => {
   try {
@@ -257,6 +258,36 @@ export const logout = async (req, res) => {
       success: false,
       message: "Error during logout",
       error: process.env.NODE_ENV === "development" ? error.message : undefined,
+    });
+  }
+};
+
+export const sendVerificationEmail = async (req, res) => {
+  const user = req.user;
+  const email = user.email;
+  const code = Math.floor(1000 + Math.random() * 9000).toString();
+  const authUser = await User.findOne({ email });
+  authUser.verificationCode = code;
+  await authUser.save();
+  await sendCodeToEmail(email, code);
+  res.json({
+    message: "Verification email sent",
+  });
+};
+
+export const verifyEmail = async (req, res) => {
+  const { code } = req.body;
+  const user = req.user;
+  if (user.verificationCode === code) {
+    user.isVerified = true;
+    user.verificationCode = null;
+    await user.save();
+    res.json({
+      message: "Email verified successfully",
+    });
+  } else {
+    res.status(400).json({
+      message: "Invalid verification code",
     });
   }
 };
