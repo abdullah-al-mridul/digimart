@@ -213,6 +213,26 @@ const adminStore = create((set, get) => ({
       toast.error("Something went wrong. Please try again.");
     }
   },
+  updateOrderStatus: async (orderId, newStatus) => {
+    try {
+      const res = await toast.promise(
+        api.put(`/orders/${orderId}/status`, { status: newStatus }), // API Call
+        {
+          loading: "Updating order status...", // Loading text
+          success: "Order status updated successfully!", // Success text
+          error: "Failed to update order status.", // Error text
+        }
+      );
+      set({
+        orders: get().orders.map((order) =>
+          order._id === orderId ? res.order : order
+        ),
+      });
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  },
 }));
 
 export default adminStore;

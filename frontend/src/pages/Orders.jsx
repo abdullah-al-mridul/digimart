@@ -1,7 +1,16 @@
-import React, { useEffect } from "react";
-import { Package, Truck, CheckCircle, Clock, AlertCircle } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import {
+  Package,
+  Truck,
+  CheckCircle,
+  Clock,
+  AlertCircle,
+  ChevronDown,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import ordersStore from "../store/ordersRoute";
+import useApi from "../hooks/useApi";
+import toast from "react-hot-toast";
 
 const OrdersSkeleton = () => {
   return (
@@ -111,6 +120,7 @@ const Orders = () => {
   useEffect(() => {
     getOrders();
   }, []);
+  const api = useApi();
   const formatPrice = (price) => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
@@ -163,6 +173,19 @@ const Orders = () => {
       order.paymentStatus === "pending" || order.paymentStatus === "failed"
     );
   };
+
+  const handlePayment = async (orderId) => {
+    const res = await toast.promise(api.post(`/payment`, { orderId }), {
+      loading: "Processing payment...",
+      success: "Payment processed successfully!",
+      error: "Failed to process payment.",
+    });
+    const redirectUrl = res.redirectUrl;
+    if (redirectUrl) {
+      window.location.href = redirectUrl;
+    }
+  };
+
   if (loading) return <OrdersSkeleton />;
   return (
     <div className="border-level-4 border-dashed border-b-2">
@@ -282,7 +305,12 @@ const Orders = () => {
                         Payment Method: {order.paymentMethod.type}
                       </p>
                       {needsPayment(order) && (
-                        <button className="mt-2 w-full bg-level-5 text-white py-2 px-4 rounded-lg hover:bg-level-5/90 transition-colors flex items-center justify-center gap-2">
+                        <button
+                          onClick={() => {
+                            handlePayment(order._id);
+                          }}
+                          className="mt-2 w-full cursor-pointer bg-level-5 text-white py-2 px-4 rounded-lg hover:bg-level-5/90 transition-colors flex items-center justify-center gap-2"
+                        >
                           Pay Now ৳{formatPrice(order.total)}
                         </button>
                       )}

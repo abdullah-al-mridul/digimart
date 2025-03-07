@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   ShoppingBag,
   Users,
@@ -9,12 +9,113 @@ import {
   XCircle,
   AlertCircle,
   MoveRight,
+  ChevronDown,
+  Truck,
 } from "lucide-react";
 import adminStore from "../store/adminStore";
 import { Link } from "react-router-dom";
 
+const getStatusColor = (status) => {
+  switch (status) {
+    case "processing":
+      return "text-blue-500";
+    case "shipped":
+      return "text-yellow-500";
+    case "delivered":
+      return "text-green-500";
+    case "cancelled":
+      return "text-red-500";
+    default:
+      return "text-level-5";
+  }
+};
+
+const getStatusIcon = (status) => {
+  switch (status) {
+    case "processing":
+      return <Package className={`w-5 h-5 ${getStatusColor(status)}`} />;
+    case "shipped":
+      return <Truck className={`w-5 h-5 ${getStatusColor(status)}`} />;
+    case "delivered":
+      return <CheckCircle className={`w-5 h-5 ${getStatusColor(status)}`} />;
+    case "cancelled":
+      return <XCircle className={`w-5 h-5 ${getStatusColor(status)}`} />;
+    case "returned":
+      return <AlertCircle className={`w-5 h-5 ${getStatusColor(status)}`} />;
+    default:
+      return <Clock className={`w-5 h-5 ${getStatusColor(status)}`} />;
+  }
+};
+
+const StatusDropdown = ({ currentStatus, onStatusChange, orderId }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const statuses = [
+    "pending",
+    "processing",
+    "shipped",
+    "delivered",
+    "cancelled",
+  ];
+
+  return (
+    <div className="relative" ref={dropdownRef}>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border-2 border-dashed ${getStatusColor(
+          currentStatus
+        )} border-current`}
+      >
+        {getStatusIcon(currentStatus)}
+        <span className="capitalize">{currentStatus}</span>
+        <ChevronDown
+          className={`w-4 h-4 transition-transform ${
+            isOpen ? "rotate-180" : ""
+          }`}
+        />
+      </button>
+
+      {isOpen && (
+        <div className="absolute top-full left-0 mt-1 w-48 bg-white border-2 border-dashed border-level-4 rounded-xl shadow-lg py-1 z-50">
+          {statuses.map((status) => (
+            <button
+              key={status}
+              onClick={() => {
+                onStatusChange(orderId, status);
+                setIsOpen(false);
+              }}
+              className={`w-full px-4 py-2 text-left hover:bg-level-2/60 transition-colors flex items-center gap-2 ${
+                currentStatus === status ? "bg-level-2/40" : ""
+              }`}
+            >
+              {getStatusIcon(status)}
+              <span className={`capitalize ${getStatusColor(status)}`}>
+                {status}
+              </span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const Admin = () => {
-  const { dashboard, getDashboard, orders, loading } = adminStore();
+  const { dashboard, getDashboard, orders, loading, updateOrderStatus } =
+    adminStore();
   console.log(dashboard);
   useEffect(() => {
     getDashboard();
@@ -24,21 +125,6 @@ const Admin = () => {
   }, [orders]);
   const formatPrice = (price) => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  };
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "processing":
-        return "text-blue-500";
-      case "shipped":
-        return "text-yellow-500";
-      case "delivered":
-        return "text-green-500";
-      case "cancelled":
-        return "text-red-500";
-      default:
-        return "text-level-5";
-    }
   };
 
   const getPaymentStatusColor = (status) => {
@@ -66,6 +152,11 @@ const Admin = () => {
         return <AlertCircle className="w-5 h-5" />;
     }
   };
+
+  const handleStatusUpdate = async (orderId, newStatus) => {
+    await updateOrderStatus(orderId, newStatus);
+  };
+
   if (loading)
     return (
       <div className="border-level-4 border-dashed border-b-2">
@@ -198,25 +289,6 @@ const Admin = () => {
                 <DollarSign className="w-6 h-6 text-level-5" />
               </div>
             </div>
-            <div className="mt-4 space-y-1">
-              {dashboard.ordersByPaymentStatus.map((status) => (
-                <div
-                  key={status._id}
-                  className="flex items-center justify-between text-sm"
-                >
-                  <span className="text-level-5/70 capitalize">
-                    {status._id}
-                  </span>
-                  <span
-                    className={`font-medium ${getPaymentStatusColor(
-                      status._id
-                    )}`}
-                  >
-                    ৳{formatPrice(status.total)}
-                  </span>
-                </div>
-              ))}
-            </div>
           </div>
           <Link
             to={"/admin/control"}
@@ -272,13 +344,11 @@ const Admin = () => {
                     <div className="space-y-1">
                       <p className="text-level-5/70">Status</p>
                       <div className="flex items-center gap-2">
-                        <span
-                          className={`capitalize font-medium ${getStatusColor(
-                            order.status
-                          )}`}
-                        >
-                          {order.status}
-                        </span>
+                        <StatusDropdown
+                          currentStatus={order.status}
+                          onStatusChange={handleStatusUpdate}
+                          orderId={order._id}
+                        />
                         <span className="text-level-5/50">|</span>
                         <span
                           className={`flex items-center gap-1 capitalize ${getPaymentStatusColor(

@@ -103,7 +103,7 @@ export const paymentSuccess = async (req, res) => {
         await order.save();
       }
     });
-    res.redirect(`${process.env.FRONTEND_URL}/checkout/success`);
+    res.redirect(`${process.env.FRONTEND_URL}/payment/success`);
     // res.status(200).json({
     //   success: true,
     //   message: "Payment successful",

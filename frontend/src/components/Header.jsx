@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ShoppingCart, User, LogOut } from "lucide-react";
+import { ShoppingCart, User, LogOut, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import authStore from "../store/authStore";
 import cartStore from "../store/cartStore";
