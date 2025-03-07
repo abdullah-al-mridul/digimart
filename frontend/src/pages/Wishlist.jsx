@@ -26,9 +26,14 @@ const Wishlist = () => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
+  if (true) return <WishlistSkeleton />;
+
   return (
     <div className="border-level-4 border-dashed border-b-2">
       <div className="container mx-auto min-h-[calc(100dvh-calc(var(--header-height)+var(--footer-height)+2px))] border-l-2 border-r-2 border-dashed border-level-4 py-8 px-8">
+        {/* Title Skeleton */}
+        <div className="h-10 w-48 bg-level-3/50 animate-pulse rounded-lg ml-7 relative before:content-[''] before:w-5 before:h-full before:bg-level-3/50 before:rounded-sm before:inline-block before:mr-2 before:absolute before:top-0 before:-left-7 mb-8"></div>
+
         {wishlist.length > 0 ? (
           <>
             <h2 className="text-3xl font-semibold text-level-5 relative before:content-[''] before:w-5 before:h-full before:bg-level-5 before:rounded-sm before:inline-block before:mr-2 before:absolute before:top-0 before:-left-7 ml-7 mb-8">
@@ -149,6 +154,71 @@ const Wishlist = () => {
             </Link>
           </div>
         )}
+      </div>
+    </div>
+  );
+};
+
+const WishlistSkeleton = () => {
+  return (
+    <div className="border-level-4 border-dashed border-b-2">
+      <div className="container mx-auto min-h-[calc(100dvh-calc(var(--header-height)+var(--footer-height)+2px))] border-l-2 border-r-2 border-dashed border-level-4 py-8 px-8">
+        {/* Title Skeleton */}
+        <div className="h-10 w-48 bg-level-3/50 animate-pulse rounded-lg ml-7 relative before:content-[''] before:w-5 before:h-full before:bg-level-3/50 before:rounded-sm before:inline-block before:mr-2 before:absolute before:top-0 before:-left-7 mb-8"></div>
+
+        {/* Wishlist Grid Skeleton */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[1, 2, 3, 4].map((item) => (
+            <div
+              key={item}
+              className="border-2 border-level-4 rounded-xl overflow-hidden"
+            >
+              {/* Product Image Skeleton */}
+              <div className="relative h-52 bg-level-2/60 p-4">
+                <div className="w-full h-full bg-level-3/50 animate-pulse rounded-lg"></div>
+                {/* Discount Badge Skeleton */}
+                <div className="absolute top-5 left-5 h-6 w-16 bg-level-3/50 animate-pulse rounded-lg transform -rotate-12"></div>
+              </div>
+
+              {/* Product Info Skeleton */}
+              <div className="p-5 space-y-4">
+                {/* Category & Brand Skeleton */}
+                <div className="flex justify-between">
+                  <div className="h-6 w-20 bg-level-3/50 animate-pulse rounded-sm"></div>
+                  <div className="h-6 w-20 bg-level-3/50 animate-pulse rounded-sm"></div>
+                </div>
+
+                {/* Title Skeleton */}
+                <div className="h-7 w-3/4 bg-level-3/50 animate-pulse rounded-lg"></div>
+
+                {/* Rating Skeleton */}
+                <div className="flex gap-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <div
+                      key={star}
+                      className="w-4 h-4 bg-level-3/50 animate-pulse rounded"
+                    ></div>
+                  ))}
+                </div>
+
+                {/* Price & Stock Skeleton */}
+                <div className="flex justify-between items-center">
+                  <div className="space-y-1">
+                    <div className="h-8 w-24 bg-level-3/50 animate-pulse rounded-lg"></div>
+                    <div className="h-5 w-20 bg-level-3/50 animate-pulse rounded-lg"></div>
+                  </div>
+                  <div className="h-6 w-20 bg-level-3/50 animate-pulse rounded-full"></div>
+                </div>
+
+                {/* Action Buttons Skeleton */}
+                <div className="flex gap-2">
+                  <div className="flex-1 h-12 bg-level-3/50 animate-pulse rounded-xl"></div>
+                  <div className="h-12 w-12 bg-level-3/50 animate-pulse rounded-xl"></div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -128,6 +128,8 @@ const Sessions = () => {
     return <Monitor className="w-5 h-5" />;
   };
 
+  if (true) return <SessionsSkeleton />;
+
   return (
     <div className="border-level-4 border-dashed border-b-2">
       <div className="container mx-auto min-h-[calc(100dvh-calc(var(--header-height)+var(--footer-height)+2px))] border-l-2 border-r-2 border-dashed border-level-4 py-8 px-8">
@@ -194,6 +196,44 @@ const Sessions = () => {
             </p>
           </div>
         )}
+      </div>
+    </div>
+  );
+};
+
+const SessionsSkeleton = () => {
+  return (
+    <div className="border-level-4 border-dashed border-b-2">
+      <div className="container mx-auto min-h-[calc(100dvh-calc(var(--header-height)+var(--footer-height)+2px))] border-l-2 border-r-2 border-dashed border-level-4 py-8 px-8">
+        {/* Title Skeleton */}
+        <div className="h-10 w-48 bg-level-3/50 animate-pulse rounded-lg ml-7 relative before:content-[''] before:w-5 before:h-full before:bg-level-3/50 before:rounded-sm before:inline-block before:mr-2 before:absolute before:top-0 before:-left-7 mb-8"></div>
+
+        {/* Sessions List Skeleton */}
+        <div className="space-y-4">
+          {[1, 2, 3, 4].map((item) => (
+            <div
+              key={item}
+              className="border-2 border-dashed border-level-4 rounded-xl p-4 bg-level-2/60"
+            >
+              <div className="flex items-center justify-between">
+                {/* Device Info Skeleton */}
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 bg-level-3/50 animate-pulse rounded-lg"></div>
+                  <div className="space-y-2">
+                    <div className="h-6 w-32 bg-level-3/50 animate-pulse rounded-lg"></div>
+                    <div className="h-4 w-48 bg-level-3/50 animate-pulse rounded-lg"></div>
+                  </div>
+                </div>
+
+                {/* Status & Actions Skeleton */}
+                <div className="flex items-center gap-4">
+                  <div className="h-8 w-24 bg-level-3/50 animate-pulse rounded-full"></div>
+                  <div className="h-10 w-10 bg-level-3/50 animate-pulse rounded-lg"></div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
