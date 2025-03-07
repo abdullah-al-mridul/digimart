@@ -2,7 +2,7 @@ import { create } from "zustand";
 import useApi from "../hooks/useApi";
 import toast from "react-hot-toast";
 const api = useApi();
-const cartStore = create((set) => ({
+const cartStore = create((set, get) => ({
   cart: [],
   loading: true,
   getCart: async () => {
@@ -34,6 +34,38 @@ const cartStore = create((set) => ({
       );
       set({
         cart: [...get().cart, res.product],
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  updateCart: async (itemId, quantity) => {
+    try {
+      const res = await toast.promise(
+        api.put(`/cart/${itemId}`, { quantity }),
+        {
+          loading: "Updating product...",
+          success: "Product updated successfully!",
+          error: "Failed to update product.",
+        }
+      );
+
+      set({
+        cart: res.cart,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  deleteCart: async (itemId) => {
+    try {
+      const res = await toast.promise(api.delete(`/cart/${itemId}`), {
+        loading: "Deleting product...",
+        success: "Product deleted successfully!",
+        error: "Failed to delete product.",
+      });
+      set({
+        cart: res.cart,
       });
     } catch (error) {
       console.log(error);

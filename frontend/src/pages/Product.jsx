@@ -4,10 +4,11 @@ import NumberFlow from "@number-flow/react";
 import { Link, useParams } from "react-router-dom";
 import productStore from "../store/productStore";
 import store from "../store/store";
+import cartStore from "../store/cartStore";
 const Product = () => {
   const { id } = useParams();
   const { getProduct, products, product, loading } = productStore();
-
+  const { addToCart } = cartStore();
   useEffect(() => {
     getProduct(id);
   }, [id]);
@@ -279,7 +280,12 @@ const Product = () => {
 
             {/* Action Buttons */}
             <div className="flex gap-4">
-              <button className="flex-1 hover:bg-level-5 border-2 border-dashed border-level-5 text-level-5 cursor-pointer hover:text-white py-3 px-6 rounded-xl  transition-colors flex items-center justify-center gap-2">
+              <button
+                onClick={() => {
+                  addToCart(product._id, quantity);
+                }}
+                className="flex-1 hover:bg-level-5 border-2 border-dashed border-level-5 text-level-5 cursor-pointer hover:text-white py-3 px-6 rounded-xl  transition-colors flex items-center justify-center gap-2"
+              >
                 <ShoppingCart className="w-5 h-5" />
                 Add to Cart
               </button>
