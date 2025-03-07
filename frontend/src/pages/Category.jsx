@@ -249,7 +249,7 @@ const Category = () => {
                     {/* Product Info */}
                     <div className="p-5 space-y-4">
                       {/* Product Name */}
-                      <Link to={`/product/${product.slug}`}>
+                      <Link to={`/product/${product._id}`}>
                         <h3 className="text-xl font-bold text-level-5 mb-2 truncate transition-colors">
                           {product.name}
                         </h3>
