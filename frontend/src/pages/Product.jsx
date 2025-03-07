@@ -5,6 +5,135 @@ import { Link, useParams } from "react-router-dom";
 import productStore from "../store/productStore";
 import store from "../store/store";
 import cartStore from "../store/cartStore";
+
+const ProductSkeleton = () => {
+  return (
+    <div className="border-level-4 border-dashed border-b-2">
+      <div className="container mx-auto border-l-2 border-r-2 border-dashed border-level-4 py-8 px-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Image Gallery Skeleton */}
+          <div className="space-y-4">
+            {/* Main Image Skeleton */}
+            <div className="border-2 border-dashed border-level-4 rounded-xl p-4 bg-level-2/60">
+              <div className="w-full h-96 bg-level-3/50 animate-pulse rounded-lg"></div>
+            </div>
+
+            {/* Thumbnail Images Skeleton */}
+            <div className="flex gap-4 overflow-x-auto pb-2">
+              {[1, 2, 3, 4].map((index) => (
+                <div
+                  key={index}
+                  className="border-2 border-dashed border-level-4 rounded-lg p-2 bg-level-2/60 min-w-[80px]"
+                >
+                  <div className="w-16 h-16 bg-level-3/50 animate-pulse rounded-lg"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Product Info Skeleton */}
+          <div className="space-y-6">
+            {/* Category & Brand Skeleton */}
+            <div className="flex items-center justify-between">
+              <div className="h-6 w-24 bg-level-3/50 animate-pulse rounded-lg"></div>
+              <div className="h-6 w-24 bg-level-3/50 animate-pulse rounded-lg"></div>
+            </div>
+
+            {/* Title Skeleton */}
+            <div className="h-10 w-3/4 bg-level-3/50 animate-pulse rounded-lg"></div>
+
+            {/* Rating Skeleton */}
+            <div className="flex items-center gap-2">
+              <div className="flex gap-1">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <div
+                    key={star}
+                    className="w-6 h-6 bg-level-3/50 animate-pulse rounded"
+                  ></div>
+                ))}
+              </div>
+              <div className="h-6 w-16 bg-level-3/50 animate-pulse rounded-lg"></div>
+            </div>
+
+            {/* Price Section Skeleton */}
+            <div className="space-y-2">
+              <div className="h-10 w-40 bg-level-3/50 animate-pulse rounded-lg"></div>
+              <div className="h-6 w-32 bg-level-3/50 animate-pulse rounded-lg"></div>
+            </div>
+
+            {/* Description Skeleton */}
+            <div className="space-y-2">
+              <div className="h-6 w-32 bg-level-3/50 animate-pulse rounded-lg"></div>
+              <div className="space-y-2">
+                <div className="h-4 w-full bg-level-3/50 animate-pulse rounded-lg"></div>
+                <div className="h-4 w-5/6 bg-level-3/50 animate-pulse rounded-lg"></div>
+                <div className="h-4 w-4/6 bg-level-3/50 animate-pulse rounded-lg"></div>
+              </div>
+            </div>
+
+            {/* Quantity Controls Skeleton */}
+            <div className="flex items-center gap-4">
+              <div className="flex items-center">
+                <div className="h-10 w-10 bg-level-3/50 animate-pulse rounded-l-lg"></div>
+                <div className="h-10 w-16 bg-level-3/50 animate-pulse"></div>
+                <div className="h-10 w-10 bg-level-3/50 animate-pulse rounded-r-lg"></div>
+              </div>
+              <div className="h-6 w-40 bg-level-3/50 animate-pulse rounded-lg"></div>
+            </div>
+
+            {/* Action Buttons Skeleton */}
+            <div className="flex gap-4">
+              <div className="flex-1 h-12 bg-level-3/50 animate-pulse rounded-xl"></div>
+              <div className="h-12 w-12 bg-level-3/50 animate-pulse rounded-xl"></div>
+              <div className="h-12 w-12 bg-level-3/50 animate-pulse rounded-xl"></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Similar Products Section Skeleton */}
+        <div className="mt-16">
+          <div className="h-8 w-48 bg-level-3/50 animate-pulse rounded-lg mb-6"></div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[1, 2, 3, 4].map((item) => (
+              <div
+                key={item}
+                className="border-2 border-level-4 rounded-xl overflow-hidden"
+              >
+                {/* Product Image Skeleton */}
+                <div className="relative h-52 bg-level-2/60 p-4">
+                  <div className="w-full h-full bg-level-3/50 animate-pulse rounded-lg"></div>
+                </div>
+
+                {/* Product Info Skeleton */}
+                <div className="p-5 space-y-4">
+                  <div className="flex justify-between">
+                    <div className="h-6 w-20 bg-level-3/50 animate-pulse rounded-sm"></div>
+                    <div className="h-6 w-20 bg-level-3/50 animate-pulse rounded-sm"></div>
+                  </div>
+                  <div className="h-7 w-3/4 bg-level-3/50 animate-pulse rounded-lg"></div>
+                  <div className="flex gap-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <div
+                        key={star}
+                        className="w-4 h-4 bg-level-3/50 animate-pulse rounded"
+                      ></div>
+                    ))}
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <div className="h-8 w-24 bg-level-3/50 animate-pulse rounded-lg"></div>
+                    <div className="h-6 w-20 bg-level-3/50 animate-pulse rounded-full"></div>
+                  </div>
+                  <div className="h-12 w-full bg-level-3/50 animate-pulse rounded-xl"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Product = () => {
   const { id } = useParams();
   const { getProduct, products, product, loading } = productStore();
@@ -160,7 +289,7 @@ const Product = () => {
   };
 
   // Calculate discounted price
-  if (loading) return <div>loading</div>;
+  if (loading) return <ProductSkeleton />;
   const discountedPrice =
     product.price - (product.price * product.discount) / 100;
   //   return null;
