@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   ShoppingBag,
   Users,
@@ -8,88 +8,20 @@ import {
   CheckCircle,
   XCircle,
   AlertCircle,
+  MoveRight,
 } from "lucide-react";
-
-const data = {
-  totalOrders: 3,
-  ordersByStatus: [
-    {
-      _id: "processing",
-      count: 1,
-    },
-    {
-      _id: "pending",
-      count: 2,
-    },
-  ],
-  totalCustomers: 0,
-  totalRevenue: 20000,
-  ordersByPaymentStatus: [
-    {
-      _id: "paid",
-      count: 1,
-      total: 20000,
-    },
-    {
-      _id: "failed",
-      count: 1,
-      total: 20000,
-    },
-    {
-      _id: "pending",
-      count: 1,
-      total: 20000,
-    },
-  ],
-};
-const orders = [
-  {
-    shippingAddress: {
-      street: "madrasamor",
-      city: "natore",
-      state: "rajshahi",
-      postalCode: "6400",
-      country: "Bangladesh",
-      phone: "+8801576969706",
-    },
-    paymentMethod: {
-      type: "cash_on_delivery",
-      details: "cash on delivery",
-    },
-    _id: "67c918eee7946eb9638efd43",
-    user: {
-      _id: "67c5986f7129094499c51b98",
-      email: "rim89987@gmail.com",
-    },
-    items: [
-      {
-        product: null,
-        quantity: 2,
-        price: 10000,
-        _id: "67c918eee7946eb9638efd44",
-      },
-    ],
-    paymentStatus: "pending",
-    status: "processing",
-    totalAmount: 20000,
-    subtotal: 20000,
-    shippingCost: 0,
-    tax: 0,
-    total: 20000,
-    statusHistory: [
-      {
-        status: "processing",
-        date: "2025-03-06T05:46:02.918Z",
-        _id: "67c9369a7f882fbb2c9bf760",
-      },
-    ],
-    createdAt: "2025-03-06T03:39:26.965Z",
-    updatedAt: "2025-03-06T05:46:02.917Z",
-    __v: 1,
-  },
-];
+import adminStore from "../store/adminStore";
+import { Link } from "react-router-dom";
 
 const Admin = () => {
+  const { dashboard, getDashboard, orders, loading } = adminStore();
+  console.log(dashboard);
+  useEffect(() => {
+    getDashboard();
+  }, []);
+  useEffect(() => {
+    console.log(orders);
+  }, [orders]);
   const formatPrice = (price) => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
@@ -134,7 +66,71 @@ const Admin = () => {
         return <AlertCircle className="w-5 h-5" />;
     }
   };
+  if (loading)
+    return (
+      <div className="border-level-4 border-dashed border-b-2">
+        <div className="container mx-auto min-h-[calc(100dvh-calc(var(--header-height)+var(--footer-height)+2px))] border-l-2 border-r-2 border-dashed border-level-4 py-8 px-8">
+          <div className="h-8 w-48 bg-level-4/20 rounded-lg animate-pulse mb-8" />
 
+          {/* Stats Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {[...Array(4)].map((_, i) => (
+              <div
+                key={i}
+                className="border-2 border-dashed border-level-4 rounded-xl p-6 bg-level-2/60"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="space-y-2">
+                    <div className="h-4 w-24 bg-level-4/20 rounded animate-pulse" />
+                    <div className="h-8 w-16 bg-level-4/20 rounded animate-pulse" />
+                  </div>
+                  <div className="p-4 bg-level-2 rounded-xl border-2 border-dashed border-level-4">
+                    <div className="w-6 h-6 bg-level-4/20 rounded animate-pulse" />
+                  </div>
+                </div>
+                {i === 0 && (
+                  <div className="mt-4 space-y-2">
+                    {[...Array(4)].map((_, j) => (
+                      <div key={j} className="flex justify-between">
+                        <div className="h-4 w-20 bg-level-4/20 rounded animate-pulse" />
+                        <div className="h-4 w-8 bg-level-4/20 rounded animate-pulse" />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Recent Orders Skeleton */}
+          <div className="border-2 border-dashed border-level-4 rounded-xl">
+            <div className="p-4 border-b-2 border-dashed border-level-4">
+              <div className="h-6 w-32 bg-level-4/20 rounded animate-pulse" />
+            </div>
+            <div className="p-4">
+              <div className="space-y-4">
+                {[...Array(3)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="border-2 border-dashed border-level-4 rounded-xl p-4 bg-level-2/60"
+                  >
+                    <div className="flex flex-wrap gap-6 justify-between">
+                      {[...Array(4)].map((_, j) => (
+                        <div key={j} className="space-y-2">
+                          <div className="h-4 w-24 bg-level-4/20 rounded animate-pulse" />
+                          <div className="h-5 w-32 bg-level-4/20 rounded animate-pulse" />
+                          <div className="h-4 w-28 bg-level-4/20 rounded animate-pulse" />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   return (
     <div className="border-level-4 border-dashed border-b-2">
       <div className="container mx-auto min-h-[calc(100dvh-calc(var(--header-height)+var(--footer-height)+2px))] border-l-2 border-r-2 border-dashed border-level-4 py-8 px-8">
@@ -150,7 +146,7 @@ const Admin = () => {
               <div>
                 <p className="text-level-5/70">Total Orders</p>
                 <h3 className="text-3xl font-bold text-level-5 mt-1">
-                  {data.totalOrders}
+                  {dashboard.totalOrders}
                 </h3>
               </div>
               <div className="p-4 bg-level-2 rounded-xl border-2 border-dashed border-level-4">
@@ -158,7 +154,7 @@ const Admin = () => {
               </div>
             </div>
             <div className="mt-4 space-y-1">
-              {data.ordersByStatus.map((status) => (
+              {dashboard.ordersByStatus.map((status) => (
                 <div
                   key={status._id}
                   className="flex items-center justify-between text-sm"
@@ -180,7 +176,7 @@ const Admin = () => {
               <div>
                 <p className="text-level-5/70">Total Customers</p>
                 <h3 className="text-3xl font-bold text-level-5 mt-1">
-                  {data.totalCustomers}
+                  {dashboard.totalCustomers}
                 </h3>
               </div>
               <div className="p-4 bg-level-2 rounded-xl border-2 border-dashed border-level-4">
@@ -195,7 +191,7 @@ const Admin = () => {
               <div>
                 <p className="text-level-5/70">Total Revenue</p>
                 <h3 className="text-3xl font-bold text-level-5 mt-1">
-                  ৳{formatPrice(data.totalRevenue)}
+                  ৳{formatPrice(dashboard.totalRevenue)}
                 </h3>
               </div>
               <div className="p-4 bg-level-2 rounded-xl border-2 border-dashed border-level-4">
@@ -203,7 +199,7 @@ const Admin = () => {
               </div>
             </div>
             <div className="mt-4 space-y-1">
-              {data.ordersByPaymentStatus.map((status) => (
+              {dashboard.ordersByPaymentStatus.map((status) => (
                 <div
                   key={status._id}
                   className="flex items-center justify-between text-sm"
@@ -222,6 +218,19 @@ const Admin = () => {
               ))}
             </div>
           </div>
+          <Link
+            to={"/admin/control"}
+            className="border-2 border-dashed flex group items-center justify-center border-level-4 rounded-xl p-6 bg-level-2/60"
+          >
+            <div className="flex items-center flex-col gap-5 justify-between">
+              <div>
+                <p className="text-level-5 font-bold text-3xl">Control Zone!</p>
+              </div>
+              <div className="p-4 bg-level-2 group-hover:-rotate-15 transition-all rounded-xl border-2 border-dashed border-level-4">
+                <MoveRight className="w-6 h-6 text-level-5" />
+              </div>
+            </div>
+          </Link>
         </div>
 
         {/* Recent Orders */}
