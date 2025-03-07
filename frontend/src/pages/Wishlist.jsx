@@ -1,38 +1,28 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ShoppingCart, Trash2, Star } from "lucide-react";
 import { Link } from "react-router-dom";
+import wishlistStore from "../store/wishlistStore";
+import cartStore from "../store/cartStore";
 
 const Wishlist = () => {
-  const wishlist = [
-    {
-      _id: "67c8191c68175954d604f8fa",
-      name: "bettary",
-      description: "bettary description okay",
-      price: 10000,
-      images: [
-        "https://res.cloudinary.com/dj5cslczv/image/upload/v1741262389/products/images-1741262388773-268977497_xplciq.png",
-      ],
-      category: "67c5bdb98690000e3abde1a6",
-      brand: "tech",
-      stock: 10,
-      rating: 0,
-      discount: 80,
-      isFeatured: true,
-      slug: "bettary",
-    },
-  ];
+  const { wishlist, getWishlist, loading, deleteFromWishlist } =
+    wishlistStore();
+  const { addToCart } = cartStore();
+  useEffect(() => {
+    getWishlist();
+  }, []);
 
   const formatPrice = (price) => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
-  if (true) return <WishlistSkeleton />;
+  if (loading) return <WishlistSkeleton />;
 
   return (
     <div className="border-level-4 border-dashed border-b-2">
       <div className="container mx-auto min-h-[calc(100dvh-calc(var(--header-height)+var(--footer-height)+2px))] border-l-2 border-r-2 border-dashed border-level-4 py-8 px-8">
         {/* Title Skeleton */}
-        <div className="h-10 w-48 bg-level-3/50 animate-pulse rounded-lg ml-7 relative before:content-[''] before:w-5 before:h-full before:bg-level-3/50 before:rounded-sm before:inline-block before:mr-2 before:absolute before:top-0 before:-left-7 mb-8"></div>
+        {/* <div className="h-10 w-48 bg-level-3/50 animate-pulse rounded-lg ml-7 relative before:content-[''] before:w-5 before:h-full before:bg-level-3/50 before:rounded-sm before:inline-block before:mr-2 before:absolute before:top-0 before:-left-7 mb-8"></div> */}
 
         {wishlist.length > 0 ? (
           <>
@@ -124,11 +114,21 @@ const Wishlist = () => {
 
                       {/* Action Buttons */}
                       <div className="flex gap-2">
-                        <button className="flex-1 hover:bg-level-5 border-2 border-dashed border-level-5 text-level-5 cursor-pointer hover:text-white py-2 px-4 rounded-xl transition-colors flex items-center justify-center gap-2">
+                        <button
+                          onClick={() => {
+                            addToCart(product._id);
+                          }}
+                          className="flex-1 hover:bg-level-5 border-2 border-dashed border-level-5 text-level-5 cursor-pointer hover:text-white py-2 px-4 rounded-xl transition-colors flex items-center justify-center gap-2"
+                        >
                           <ShoppingCart className="w-4 h-4" />
                           Add to Cart
                         </button>
-                        <button className="p-2 hover:bg-red-500 hover:border-red-500 hover:text-white border-2 border-dashed border-level-4 rounded-xl text-level-5 transition-colors">
+                        <button
+                          onClick={() => {
+                            deleteFromWishlist(product._id);
+                          }}
+                          className="p-2 hover:bg-level-4 cursor-pointer hover:text-white border-2 border-dashed border-level-4 rounded-xl text-level-5 transition-colors"
+                        >
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>

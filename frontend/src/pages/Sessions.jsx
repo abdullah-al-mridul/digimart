@@ -1,105 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { LogIn, LogOut, Monitor, Smartphone, Globe, Clock } from "lucide-react";
-
-const sessionHistory = [
-  {
-    action: "login",
-    timestamp: "2025-03-03T13:12:49.174Z",
-    userAgent: "PostmanRuntime/7.43.0",
-    ip: "::1",
-    device: "unknown",
-    _id: "67c5aad175fd5957a30023ff",
-  },
-  {
-    action: "login",
-    timestamp: "2025-03-03T13:16:49.339Z",
-    userAgent: "PostmanRuntime/7.43.0",
-    ip: "::1",
-    device: "unknown",
-    _id: "67c5abc175fd5957a3002403",
-  },
-  {
-    action: "login",
-    timestamp: "2025-03-03T13:20:49.391Z",
-    userAgent: "PostmanRuntime/7.43.0",
-    ip: "::1",
-    device: "unknown",
-    _id: "67c5acb18bedd15e21e4b1a3",
-  },
-  {
-    action: "login",
-    timestamp: "2025-03-03T13:22:33.657Z",
-    userAgent: "PostmanRuntime/7.43.0",
-    ip: "::1",
-    device: "unknown",
-    _id: "67c5ad1932e85550ebde8820",
-  },
-  {
-    action: "login",
-    timestamp: "2025-03-03T13:23:51.087Z",
-    userAgent: "PostmanRuntime/7.43.0",
-    ip: "::1",
-    device: "unknown",
-    _id: "67c5ad67e64cea123880af13",
-  },
-  {
-    action: "login",
-    timestamp: "2025-03-03T13:26:18.875Z",
-    userAgent: "PostmanRuntime/7.43.0",
-    ip: "::1",
-    device: "unknown",
-    _id: "67c5adfaa51b1e19fa657c24",
-  },
-  {
-    action: "logout",
-    timestamp: "2025-03-03T13:37:01.376Z",
-    userAgent: "PostmanRuntime/7.43.0",
-    ip: "::1",
-    _id: "67c5b07dff7388e6a832a6c5",
-  },
-  {
-    action: "login",
-    timestamp: "2025-03-03T13:37:13.443Z",
-    userAgent: "PostmanRuntime/7.43.0",
-    ip: "::1",
-    device: "unknown",
-    _id: "67c5b089ff7388e6a832a6d5",
-  },
-  {
-    action: "login",
-    timestamp: "2025-03-03T15:28:42.038Z",
-    userAgent: "PostmanRuntime/7.43.0",
-    ip: "::1",
-    device: "unknown",
-    _id: "67c5caaaf23cde3e21117706",
-  },
-  {
-    action: "login",
-    timestamp: "2025-03-05T04:00:03.714Z",
-    userAgent: "PostmanRuntime/7.43.0",
-    ip: "::1",
-    device: "unknown",
-    _id: "67c7cc4389578bbb5bd2a14f",
-  },
-  {
-    action: "login",
-    timestamp: "2025-03-05T04:00:44.911Z",
-    userAgent: "PostmanRuntime/7.43.0",
-    ip: "::1",
-    device: "unknown",
-    _id: "67c7cc6c89578bbb5bd2a15c",
-  },
-  {
-    action: "login",
-    timestamp: "2025-03-06T04:34:05.553Z",
-    userAgent: "PostmanRuntime/7.43.0",
-    ip: "::1",
-    device: "unknown",
-    _id: "67c925bdff82ffdf1a1b06bf",
-  },
-];
+import sessionsStore from "../store/SessionsStore";
 
 const Sessions = () => {
+  const { sessionHistory, getSessions, loading } = sessionsStore();
+  useEffect(() => {
+    getSessions();
+  }, []);
   const formatDate = (timestamp) => {
     return new Date(timestamp).toLocaleString("en-US", {
       year: "numeric",
@@ -128,7 +35,7 @@ const Sessions = () => {
     return <Monitor className="w-5 h-5" />;
   };
 
-  if (true) return <SessionsSkeleton />;
+  if (loading) return <SessionsSkeleton />;
 
   return (
     <div className="border-level-4 border-dashed border-b-2">

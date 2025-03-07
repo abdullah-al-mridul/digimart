@@ -5,6 +5,7 @@ import { Link, useParams } from "react-router-dom";
 import productStore from "../store/productStore";
 import store from "../store/store";
 import cartStore from "../store/cartStore";
+import wishlistStore from "../store/wishlistStore";
 
 const ProductSkeleton = () => {
   return (
@@ -138,6 +139,7 @@ const Product = () => {
   const { id } = useParams();
   const { getProduct, products, product, loading } = productStore();
   const { addToCart } = cartStore();
+  const { addToWishlist } = wishlistStore();
   useEffect(() => {
     getProduct(id);
   }, [id]);
@@ -418,7 +420,12 @@ const Product = () => {
                 <ShoppingCart className="w-5 h-5" />
                 Add to Cart
               </button>
-              <button className="p-3 border-2 hover:text-white hover:bg-level-5 cursor-pointer border-dashed border-level-4 rounded-xl text-level-5 hover:border-level-5 transition-colors">
+              <button
+                onClick={() => {
+                  addToWishlist(product._id);
+                }}
+                className="p-3 border-2 hover:text-white hover:bg-level-5 cursor-pointer border-dashed border-level-4 rounded-xl text-level-5 hover:border-level-5 transition-colors"
+              >
                 <Heart className="w-5 h-5" />
               </button>
               <button className="p-3 border-2 border-dashed hover:text-white hover:bg-level-5 cursor-pointer border-level-4 rounded-xl text-level-5 hover:border-level-5 transition-colors">
