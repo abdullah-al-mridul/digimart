@@ -86,8 +86,8 @@ const Categories = () => {
   return (
     <div className=" border-b-2 border-dashed border-level-4">
       <div className=" container mx-auto border-2 border-dashed border-level-4 border-t-0 border-b-0  p-4">
-        <div className="flex gap-5 items-center mb-4">
-          <h2 className="text-3xl font-semibold text-level-5 relative before:content-[''] before:w-5 before:h-full before:bg-level-5 before:rounded-sm before:inline-block before:mr-2 before:absolute before:top-0 before:-left-7 ml-7">
+        <div className="flex flex-col items-start sm:flex-row sm:gap-5 sm:items-center mb-4">
+          <h2 className="text-2xl md:text-3xl font-semibold text-level-5 relative before:content-[''] before:w-5 before:h-full before:bg-level-5 before:rounded-sm before:inline-block before:mr-2 before:absolute before:top-0 before:-left-7 ml-7">
             Categories
           </h2>
           <div className="flex items-center gap-4">
@@ -109,7 +109,7 @@ const Categories = () => {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 w-full  gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 w-full  gap-4">
           {categories.map((item) => (
             <Link
               to={`/category/${item._id}`}
