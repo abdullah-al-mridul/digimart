@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import authStore from "../store/authStore";
 import toast from "react-hot-toast";
 
 const EmailVerification = () => {
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [resendTimer, setResendTimer] = useState(0);
-  const { user, verifyEmail, sendVerificationEmail } = authStore();
+  const { user, verifyEmail, resendVerificationEmail } = authStore();
   const navigate = useNavigate();
 
   // Handle initial timer and redirect if already verified
@@ -98,30 +98,27 @@ const EmailVerification = () => {
 
     try {
       await verifyEmail(code);
-      toast.success("Email verified successfully!");
-      navigate("/");
     } catch (error) {
-      toast.error(error.message || "Verification failed");
+      console.log(error);
     }
   };
 
   // Handle resend
   const handleResend = async () => {
+    console.log("dff");
     try {
-      await sendVerificationEmail();
+      await resendVerificationEmail();
       const timerDuration = 30;
       setResendTimer(timerDuration);
 
       // Save timer state to localStorage
       localStorage.setItem("verificationTimer", timerDuration.toString());
       localStorage.setItem("verificationTimestamp", Date.now().toString());
-
-      toast.success("Verification code sent!");
     } catch (error) {
-      toast.error(error.message || "Failed to send verification code");
+      console.log(error);
     }
   };
-
+  if (user?.isVerified) return <Navigate to={"/"} replace />;
   return (
     <div className="border-level-4 border-dashed border-b-2">
       <div className="container mx-auto min-h-[calc(100dvh-calc(var(--header-height)+var(--footer-height)+2px))] border-l-2 border-r-2 border-dashed border-level-4 py-8 px-8">

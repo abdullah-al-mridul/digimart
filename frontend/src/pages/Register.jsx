@@ -4,7 +4,7 @@ import { Link, Navigate } from "react-router-dom";
 import authStore from "../store/authStore";
 
 const Register = () => {
-  const { user } = authStore();
+  const { user, register } = authStore();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -25,10 +25,13 @@ const Register = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add your registration logic here
-    console.log(formData);
+    await register({
+      email: formData.email,
+      password: formData.password,
+      username: formData.username,
+    });
   };
   if (user) return <Navigate to={"/"} replace />;
   return (

@@ -66,12 +66,14 @@ export const register = async (req, res) => {
       { expiresIn: "24h" }
     );
 
-    // Get user data without sensitive information
-    const userData = newUser.getPublicProfile();
-
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    });
     res.status(201).json({
       message: "Registration successful",
-      user: userData,
+      user: newUser,
       token,
     });
   } catch (error) {
@@ -283,6 +285,7 @@ export const verifyEmail = async (req, res) => {
     user.verificationCode = null;
     await user.save();
     res.json({
+      success: true,
       message: "Email verified successfully",
     });
   } else {

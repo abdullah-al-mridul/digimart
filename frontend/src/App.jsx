@@ -97,14 +97,7 @@ const App = () => {
               </SecureRoute>
             }
           />
-          <Route
-            path="/verify-email"
-            element={
-              <SecureRoute>
-                <EmailVerification />
-              </SecureRoute>
-            }
-          />
+          <Route path="/verify-email" element={<EmailVerification />} />
         </Routes>
         <Footer />
         <div>

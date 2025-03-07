@@ -133,6 +133,7 @@ export const paymentFail = async (req, res) => {
   //       error: process.env.NODE_ENV === "development" ? error.message : undefined,
   //     });
   //   }
+  res.redirect(`${process.env.FRONTEND_URL}/payment/fail`);
 };
 export const paymentCancel = async (req, res) => {
   //   try {

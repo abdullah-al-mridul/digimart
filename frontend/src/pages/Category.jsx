@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ChevronDown, ChevronUp, Star, ShoppingCart } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import categoryStore from "../store/categoryStore";
+import cartStore from "../store/cartStore";
 
 // const data = {
 //   category: {
@@ -126,6 +127,7 @@ const CategorySkeleton = () => {
 
 const Category = () => {
   const { id } = useParams();
+  const { addToCart } = cartStore();
   const { getCategory, data, loading } = categoryStore();
   useEffect(() => {
     getCategory(id);
@@ -290,7 +292,10 @@ const Category = () => {
                       </div>
 
                       {/* Add to Cart Button */}
-                      <button className="hover:bg-level-5 border-2 border-dashed border-level-5 text-level-5 rounded-xl flex items-center justify-center gap-2 w-full p-3 cursor-pointer hover:text-white font-medium transition-colors">
+                      <button
+                        onClick={() => addToCart(product._id)}
+                        className="hover:bg-level-5 border-2 border-dashed border-level-5 text-level-5 rounded-xl flex items-center justify-center gap-2 w-full p-3 cursor-pointer hover:text-white font-medium transition-colors"
+                      >
                         Add To Cart
                         <ShoppingCart className="w-5 h-5" />
                       </button>
