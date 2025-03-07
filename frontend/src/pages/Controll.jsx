@@ -494,6 +494,7 @@ const Controll = () => {
     updateCatagory,
     addProduct,
     updateProduct,
+    deleteProduct,
   } = adminStore();
   const [activeTab, setActiveTab] = useState("categories"); // or "products"
   const [searchTerm, setSearchTerm] = useState("");
@@ -598,7 +599,7 @@ const Controll = () => {
       setUpdateProductData({
         name: item.name,
         description: item.description,
-        images: item.images || [],
+        images: [],
         price: item.price,
         category: item.category._id,
         brand: item.brand,
@@ -1157,9 +1158,15 @@ const Controll = () => {
                             onClick={() => handleEdit(product)}
                             className="p-2 text-blue-500 hover:bg-blue-500/10 rounded-lg transition-colors"
                           >
+                            {/* {console.log(product)} */}
                             <Pencil className="w-5 h-5" />
                           </button>
-                          <button className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors">
+                          <button
+                            onClick={() => {
+                              deleteProduct(product._id);
+                            }}
+                            className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
+                          >
                             <Trash className="w-5 h-5" />
                           </button>
                         </div>

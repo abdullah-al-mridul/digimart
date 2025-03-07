@@ -159,7 +159,7 @@ export const createProduct = async (req, res) => {
       isFeatured: isFeatured || false,
       rating: rating || 0,
     });
-
+    await product.populate("category");
     res.status(201).json({
       success: true,
       message: "Product created successfully",

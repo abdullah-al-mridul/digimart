@@ -128,12 +128,14 @@ const adminStore = create((set, get) => ({
       const form = new FormData();
       form.append("name", newProductData.name);
       form.append("description", newProductData.description);
-      form.append("images", newProductData.images);
       form.append("price", newProductData.price);
       form.append("stock", newProductData.stock);
       form.append("brand", newProductData.brand);
       form.append("category", newProductData.category);
       form.append("discount", newProductData.discount);
+      newProductData.images.forEach((image) => {
+        form.append("images", image);
+      });
 
       const res = await toast.promise(
         api.post("/products", form), // API Call
@@ -143,9 +145,29 @@ const adminStore = create((set, get) => ({
           error: "Failed to add product.", // Error text
         }
       );
-
       set({
         products: [...get().products, res.product],
+      });
+      console.log(res);
+    } catch (error) {
+      // Handle error explicitly here
+      console.error("Error adding product:", error);
+      toast.error("Something went wrong. Please try again.");
+    }
+  },
+  deleteProduct: async (productId) => {
+    try {
+      const res = await toast.promise(
+        api.delete(`/products/${productId}`), // API Call
+        {
+          loading: "Deleting product...", // Loading text
+          success: "Product deleted successfully!", // Success text
+          error: "Failed to delete product.", // Error text
+        }
+      );
+
+      set({
+        products: get().products.filter((product) => product._id !== productId),
       });
 
       console.log(res);
@@ -154,7 +176,40 @@ const adminStore = create((set, get) => ({
       console.error("Error adding product:", error);
       toast.error("Something went wrong. Please try again.");
     }
-    console.log(newProductData);
+  },
+  updateProduct: async (updateProductData, productId) => {
+    try {
+      const form = new FormData();
+      form.append("name", updateProductData.name);
+      form.append("description", updateProductData.description);
+      form.append("price", updateProductData.price);
+      form.append("stock", updateProductData.stock);
+      form.append("brand", updateProductData.brand);
+      form.append("category", updateProductData.category);
+      form.append("discount", updateProductData.discount);
+      updateProductData.images.forEach((image) => {
+        form.append("images", image);
+      });
+
+      const res = await toast.promise(
+        api.put(`/products/${productId}`, form), // API Call
+        {
+          loading: "Updating product...", // Loading text
+          success: "Product updated successfully!", // Success text
+          error: "Failed to update product.", // Error text
+        }
+      );
+      set({
+        products: get().products.map((product) =>
+          product._id === productId ? res.product : product
+        ),
+      });
+      console.log(res);
+    } catch (error) {
+      // Handle error explicitly here
+      console.error("Error adding product:", error);
+      toast.error("Something went wrong. Please try again.");
+    }
   },
 }));
 
